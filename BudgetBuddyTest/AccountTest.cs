@@ -1,6 +1,3 @@
-using BudgetBuddyCore;
-using BudgetBuddyCore.Models;
-
 namespace BudgetBuddyTest;
 
 [TestClass]

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\BudgetBuddy_Core\BudgetBuddy_Core.csproj" />
-    <ProjectReference Include="..\BudgetBuddy_Sqlite\BudgetBuddy_Sqlite.csproj" />
+    <ProjectReference Include="..\BudgetBuddy\BudgetBuddy.csproj" />
+    <ProjectReference Include="..\BudgetBuddy.Sqlite\BudgetBuddy.Sqlite.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

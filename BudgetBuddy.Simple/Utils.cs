@@ -1,4 +1,4 @@
-namespace BudgetBuddySimple;
+namespace BudgetBuddy.Simple;
 
 public static class Utils
 {
@@ -69,7 +69,7 @@ public static class Utils
     /// <param name="cancelString"></param>
     /// <returns>Returns the string entered, or null when canceled</returns>
     /// <exception cref="ArgumentException">Thrown when Parameter <c>minLength</c> is bigger than Paramter <c>maxLength</c></exception>
-    public static string? GetStringInput(string message, uint minLength = 0, uint maxLength = 255, string cancelString = "exit")
+    public static string? GetStringInput(string message, uint minLength = 0, uint maxLength = 255, string cancelString = "cancel")
     {
         if (minLength > maxLength)
             throw new ArgumentException("minLength can not be bigger than maxLength");
@@ -81,10 +81,7 @@ public static class Utils
         {
             readString = Console.ReadLine();
             if (readString == null)
-            {
-                Console.WriteLine("Please enter some text");
                 continue;
-            }
 
             if (readString.Trim().ToLower() == cancelString.ToLower())
                 return null;
@@ -106,7 +103,35 @@ public static class Utils
     }
 
     /// <summary>
-    /// Method <c>GetYesNoInput</c> askes for a yes or a no from the user.
+    /// Method <c>GetDecimalInput</c> takes input from user and tries to convert into decimal.
+    /// </summary>
+    /// <param name="message"></param>
+    /// <param name="cancelString"></param>
+    /// <returns>Returns decimal entered, or null when canceled</returns>
+    public static decimal? GetDecimalInput(string message, string cancelString = "cancel")
+    {
+        Console.WriteLine($"{message} (or '{cancelString}' to cancel)");
+
+        decimal value;
+        string? readString;
+        while (true)
+        {
+            readString = Console.ReadLine()?.Trim();
+            if (readString == null)
+                continue;
+            
+            if (readString.ToLower() == cancelString.ToLower())
+                return null;
+            
+            if (decimal.TryParse(readString, out value))
+                return value;
+            else
+                Console.WriteLine("Not a valid decimal number");
+        }
+    }
+
+    /// <summary>
+    /// Method <c>GetYesNoInput</c> asks for a yes or a no from the user.
     /// </summary>
     /// <param name="message"></param>
     /// <param name="isYesDefault"></param>
