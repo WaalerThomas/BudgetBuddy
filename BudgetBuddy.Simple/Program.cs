@@ -1,12 +1,12 @@
-﻿using BudgetBuddyCore;
-using BudgetBuddyCore.Models;
-using BudgetBuddySqlite;
+﻿using System.Diagnostics.CodeAnalysis;
+using BudgetBuddy.Controllers;
+using BudgetBuddy.Models;
+using BudgetBuddy.Sqlite;
 
-namespace BudgetBuddySimple;
+namespace BudgetBuddy.Simple;
 
 internal class Program
 {
-    // Class specific variables
     bool shouldApplicationClose;
     string[] mainMenu;
     string[] accountsMenu;
@@ -16,10 +16,6 @@ internal class Program
 
     int menuStartX;
     int menuStartY;
-
-    // BudgetBuddy Core related variables
-    private readonly DatabaseContext _databaseContext;
-    Application application;
 
     public Program(bool rebuildDatabase = false)
     {
@@ -33,7 +29,8 @@ internal class Program
         accountsMenu = [
             "List budgeting accounts",
             "Add budgeting account",
-            "Update balances"
+            "Change name of a budgeting account",
+            //"Remove a budgeting account"              // TODO: Think about how we are going to handle this if account has transactions already. Something historics.
         ];
         groupsCategoriesMenu = [
             "List groups & categories",
@@ -43,8 +40,7 @@ internal class Program
         transactionsMenu = [
             "Show last reconciliation",
             "Show activity data",
-            "New transaction",
-            "Find transaction"
+            "Adjust account balance"
         ];
         categoryTransferMenu = [
             "View funding details",
@@ -54,14 +50,6 @@ internal class Program
 
         menuStartX = 0;
         menuStartY = 0;
-
-        _databaseContext = new DatabaseContext("hello.db", rebuildDatabase);
-        application = new Application(
-            new AccountRespository(_databaseContext),
-            new GroupRepository(_databaseContext),
-            new CategoryRepository(_databaseContext),
-            new TransactionRepository(_databaseContext)
-        );
 
         StartApplicationLoop();
     }
@@ -109,8 +97,7 @@ internal class Program
                 break;
             default:
                 Console.WriteLine("This option is not being handled yet.");
-                Console.WriteLine("Press ENTER to continue");
-                Console.ReadLine();
+                PauseConsole();
                 break;
         }
     }
@@ -135,10 +122,12 @@ internal class Program
                 case 2:
                     MenuActionAddAccount();
                     break;
+                case 3:
+                    MenuActionRenameAccount();
+                    break;
                 default:
                     Console.WriteLine("This option is not being handled yet.");
-                    Console.WriteLine("Press ENTER to continue");
-                    Console.ReadLine();
+                    PauseConsole();
                     break;
             }
         } while (true);
@@ -169,8 +158,7 @@ internal class Program
                     break;
                 default:
                     Console.WriteLine("This option is not being handled yet.");
-                    Console.WriteLine("Press ENTER to continue");
-                    Console.ReadLine();
+                    PauseConsole();
                     break;
             }
         } while (true);
@@ -191,12 +179,11 @@ internal class Program
             switch (optionSelected)
             {
                 case 3:
-                    MenuActionNewTransaction();
+                    MenuActionAdjustAccountBalance();
                     break;
                 default:
                     Console.WriteLine("This option is not being handled yet.");
-                    Console.WriteLine("Press ENTER to continue");
-                    Console.ReadLine();
+                    PauseConsole();
                     break;
             }
         } while (true);
@@ -218,8 +205,7 @@ internal class Program
             {
                 default:
                     Console.WriteLine("This option is not being handled yet.");
-                    Console.WriteLine("Press ENTER to continue");
-                    Console.ReadLine();
+                    PauseConsole();
                     break;
             }
         } while (true);
@@ -227,21 +213,22 @@ internal class Program
 
     void MenuActionListAccounts()
     {
-        List<Account> accounts = application.GetAccounts();
+        var uow = new UnitOfWork(new DatabaseContext());
+        List<Account> accountsCopy = uow.Accounts.GetAll().ToList();
+        uow.Dispose();
         
         Console.WriteLine("Budgeting Accounts:");
-        if (accounts.Count == 0)
+        if (accountsCopy.Count == 0)
             Console.WriteLine("No accounts have been registered");
         else
         {
             Console.WriteLine("Id".PadRight(10) + "Account Name".PadRight(20) + "Balance".PadRight(15));
-            foreach (var account in accounts)
+            foreach (var account in accountsCopy)
                 Console.WriteLine($"{account.Id,-10}{account.Name,-20}{account.Balance.ToString(),-15:C}");
         }
 
         Console.WriteLine();
-        Console.WriteLine("Press ENTER to continue!");
-        Console.ReadLine();
+        PauseConsole();
     }
 
     void MenuActionAddAccount()
@@ -251,24 +238,69 @@ internal class Program
         bool addMore;
         do
         {
-            string? accountName = Utils.GetStringInput("Enter account name", minLength: 1, maxLength: 20);
+            string? accountName = Utils.GetStringInput("Enter account name", minLength: AccountController.MIN_NAME_LENGTH, maxLength: AccountController.MAX_NAME_LENGTH);
             if (accountName == null)
                 return;
 
-            Account account = new Account() { Name = accountName };
-            bool added = application.AddAccount(account);
-            if (added)
-                Console.WriteLine($"Account '{accountName}' added");
-            else
-                Console.WriteLine($"Failed to create account '{accountName}'");
+            using (var uow = new UnitOfWork(new DatabaseContext()))
+            {
+                Account account = AccountController.CreateAccount(accountName);
+                uow.Accounts.Add(account);
+                uow.Complete();
+            }
+            Console.WriteLine($"Account '{accountName}' added");
 
             Console.WriteLine();
             addMore = Utils.GetYesNoInput("Add another account?", isYesDefault: true);
         } while (addMore == true);
     }
 
+    void MenuActionRenameAccount()
+    {
+        using (var uow = new UnitOfWork(new DatabaseContext()))
+        {
+            List<Account> accounts = uow.Accounts.GetAll().ToList();
+            if (accounts.Count == 0)
+            {
+                Console.WriteLine("No accounts created. Please do that first");
+                PauseConsole();
+                return;
+            }
+
+            string[] accountNames = accounts.Where(a => a != null).Select(a => a.Name).ToArray();
+            int menuSelection = Utils.MenuSelector(
+                menuItems: accountNames,
+                selectionMessage: "Choose an account to rename",
+                headerMessage: "Available Accounts",
+                cancelString: "cancel"
+            );
+            if (menuSelection == -1)
+                return;
+            
+            Console.WriteLine($"Selected account '{accounts[menuSelection - 1].Name}'");
+
+            Console.WriteLine();
+            Account? account = uow.Accounts.Get(accounts[menuSelection - 1].Id);
+            if (account == null)
+                return;
+            
+            string oldName = account.Name;
+            string? newName = Utils.GetStringInput("Enter new account name", minLength: AccountController.MIN_NAME_LENGTH, maxLength: AccountController.MAX_NAME_LENGTH);
+            if (newName == null)
+                return;
+            
+            account.Name = newName;
+
+            Console.WriteLine($"Renamed account '{oldName}' to '{newName}'");
+            uow.Complete();
+        }
+        
+        PauseConsole();
+    }
+
     void MenuActionListGroupsCategories()
     {
+        /*
         List<Group> groups = application.GetGroups();
 
         Console.WriteLine("Groups and Categories");
@@ -288,12 +320,13 @@ internal class Program
         }
 
         Console.WriteLine();
-        Console.WriteLine("Press ENTER to continue!");
-        Console.ReadLine();
+        PauseConsole();
+        */
     }
 
     void MenuActionAddGroup()
     {
+        /*
         Console.WriteLine("Create a new group");
 
         bool addMore;
@@ -313,10 +346,12 @@ internal class Program
             Console.WriteLine();
             addMore = Utils.GetYesNoInput("Add another group?", isYesDefault: true);
         } while (addMore == true);
+        */
     }
 
     void MenuActionAddCategory()
     {
+        /*
         Console.WriteLine("Create a new category");
 
         List<Group> groups = application.GetGroups();
@@ -331,8 +366,7 @@ internal class Program
             if (groupsName.Length == 0)
             {
                 Console.WriteLine("No registered groups. Please add one first");
-                Console.WriteLine("Press ENTER to continue");
-                Console.ReadLine();
+                PauseConsole();
                 return;
             }
 
@@ -362,14 +396,62 @@ internal class Program
             Console.WriteLine();
             addMore = Utils.GetYesNoInput("Add another category?", isYesDefault: true);
         } while (addMore == true);
+        */
     }
 
     void MenuActionShowLastReconciliation()
     {
     }
 
+    void MenuActionAdjustAccountBalance()
+    {
+        /*
+            - User selects the account to adjust
+            - User gives either a positive or negative number for amount
+            - Print finishing message
+        */
+        /*
+        using (var uow = new UnitOfWork(_databaseContext))
+        {
+            List<Account> accounts = uow.Accounts.GetAll().ToList();
+            if (accounts.Count == 0)
+            {
+                Console.WriteLine("No accounts created. Please do that first");
+                PauseConsole();
+                return;
+            }
+
+            Console.WriteLine("Budgeting Accounts:");
+            string[] accountNames = accounts.Where(a => a != null).Select(a => a.Name).ToArray();
+            int menuSelection = Utils.MenuSelector(
+                menuItems: accountNames,
+                selectionMessage: "Choose an account to adjust balance",
+                headerMessage: "Available Accounts",
+                cancelString: "cancel"
+            );
+            if (menuSelection == -1)
+                return;
+            
+            Console.WriteLine($"Selected account '{accounts[menuSelection - 1]}'");
+
+            Console.WriteLine();
+            decimal? value = Utils.GetDecimalInput("Enter adjusting negative/positive balance", "cancel");
+            if (value == null)
+                return;
+            
+            Account account = accounts[menuSelection - 1];
+            account.AdjustBalance((decimal)value);
+            
+            // TODO: Do the transaction part here.
+            Console.WriteLine($"Adjusting account balance with '{value}'");
+            PauseConsole();
+        }
+        */
+    }
+
     void MenuActionNewTransaction()
     {
+        /*
         Console.WriteLine("Add a new transaction");
         Account? cashingAccount = application.GetAccountByName("Savings");
         Category? gasolineCategory = application.GetCategoryByName("Gasoline");
@@ -387,8 +469,7 @@ internal class Program
         }
         if (failed)
         {
-            Console.WriteLine("Press ENTER to continue");
-            Console.ReadLine();
+            PauseConsole();
             return;
         }
 
@@ -407,6 +488,13 @@ internal class Program
         else
             Console.WriteLine($"Failed to add transaction '{transaction}'");
 
+        PauseConsole();
+        */
+    }
+
+    void PauseConsole()
+    {
+        Console.WriteLine();
         Console.WriteLine("Press ENTER to continue");
         Console.ReadLine();
     }

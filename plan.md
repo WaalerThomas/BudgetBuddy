@@ -3,6 +3,12 @@
 - Find out the business code of the project
     - Make some use-cases/requirements, and construct some unit tests for them. (Basically starting with test-driven development)
 
+# Use-case
+## User
+- Should be able to create multiple accounts.
+- Should be able to add balance to an account.
+- Should be able to create budget categories.
+
 # Requirements
 Format
 ```
