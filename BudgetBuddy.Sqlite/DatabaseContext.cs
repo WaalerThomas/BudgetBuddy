@@ -6,6 +6,8 @@ namespace BudgetBuddy.Sqlite;
 public class DatabaseContext : DbContext
 {
     public DbSet<Account> Accounts { get; set; }
+    public DbSet<Group> Groups { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     public string DbPath { get; }
 
