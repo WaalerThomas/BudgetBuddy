@@ -261,13 +261,13 @@ internal class Program
         bool addMore;
         do
         {
-            string? accountName = Utils.GetStringInput("Enter account name", minLength: AccountController.MIN_NAME_LENGTH, maxLength: AccountController.MAX_NAME_LENGTH);
+            string? accountName = Utils.GetStringInput("Enter account name", minLength: Account.MIN_NAME_LENGTH, maxLength: Account.MAX_NAME_LENGTH);
             if (accountName == null)
                 return;
 
             using (var uow = new UnitOfWork(new DatabaseContext()))
             {
-                Account account = AccountController.CreateAccount(accountName);
+                Account account = new() { Name = accountName };
                 uow.Accounts.Add(account);
                 uow.Complete();
             }
@@ -306,7 +306,7 @@ internal class Program
             Account account = accounts[menuSelection - 1];
             string oldName = account.Name;
             
-            string? newName = Utils.GetStringInput("Enter new account name", minLength: AccountController.MIN_NAME_LENGTH, maxLength: AccountController.MAX_NAME_LENGTH);
+            string? newName = Utils.GetStringInput("Enter new account name", minLength: Account.MIN_NAME_LENGTH, maxLength: Account.MAX_NAME_LENGTH);
             if (newName == null)
                 return;
             
@@ -356,13 +356,13 @@ internal class Program
         bool addMore;
         do
         {
-            string? groupName = Utils.GetStringInput("Enter group name", minLength: GroupController.MIN_NAME_LENGTH, maxLength: GroupController.MAX_NAME_LENGTH);
+            string? groupName = Utils.GetStringInput("Enter group name", minLength: Group.MIN_NAME_LENGTH, maxLength: Group.MAX_NAME_LENGTH);
             if (groupName == null)
                 return;
             
             using (var uow = new UnitOfWork(new DatabaseContext()))
             {
-                Group group = GroupController.CreateGroup(groupName);
+                Group group = new() { Name = groupName };
                 uow.Groups.Add(group);
                 uow.Complete();
             }
@@ -401,7 +401,7 @@ internal class Program
             Group group = groups[menuSelection - 1];
             string oldName = group.Name;
 
-            string? newName = Utils.GetStringInput("Enter new group name", minLength: GroupController.MIN_NAME_LENGTH, maxLength: GroupController.MAX_NAME_LENGTH);
+            string? newName = Utils.GetStringInput("Enter new group name", minLength: Group.MIN_NAME_LENGTH, maxLength: Group.MAX_NAME_LENGTH);
             if (newName == null)
                 return;
             
@@ -446,11 +446,11 @@ internal class Program
         bool addMore;
         do
         {
-            string? categoryName = Utils.GetStringInput("Enter category name", minLength: CategoryController.MIN_NAME_LENGTH, maxLength: CategoryController.MAX_NAME_LENGTH);
+            string? categoryName = Utils.GetStringInput("Enter category name", minLength: Category.MIN_NAME_LENGTH, maxLength: Category.MAX_NAME_LENGTH);
             if (categoryName == null)
                 return;
 
-            Category category = CategoryController.CreateCategory(categoryName);
+            Category category = new() { Name = categoryName };
 
             decimal? monthlyAmount = Utils.GetDecimalInput("Enter monthly amount", "");
             if (monthlyAmount != null)
@@ -498,7 +498,7 @@ internal class Program
             Category category = categories[menuSelection - 1];
             string oldName = category.Name;
 
-            string? newName = Utils.GetStringInput("Enter new category name", minLength: CategoryController.MIN_NAME_LENGTH, maxLength: CategoryController.MAX_NAME_LENGTH);
+            string? newName = Utils.GetStringInput("Enter new category name", minLength: Category.MIN_NAME_LENGTH, maxLength: Category.MAX_NAME_LENGTH);
             if (newName == null)
                 return;
             
