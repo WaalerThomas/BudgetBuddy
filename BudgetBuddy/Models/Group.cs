@@ -2,8 +2,8 @@ namespace BudgetBuddy.Models;
 
 public class Group
 {
-    private const int MIN_NAME_LENGTH = 4;      // TODO: Move these length values in a common spot. Used in multiple places
-    private const int MAX_NAME_LENGTH = 25;
+    public const int MIN_NAME_LENGTH = 4;      // TODO: Move these length values in a common spot. Used in multiple places
+    public const int MAX_NAME_LENGTH = 25;
 
     public int Id { get; set; }
 
@@ -19,6 +19,6 @@ public class Group
             _name = value;
         }
     }
-    
+
     public ICollection<Category> Categories { get; } = new List<Category>();
 }

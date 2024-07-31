@@ -2,8 +2,8 @@ namespace BudgetBuddy.Models;
 
 public class Category
 {
-    private const int MIN_NAME_LENGTH = 4;      // TODO: Move these length values in a common spot. Used in multiple places
-    private const int MAX_NAME_LENGTH = 25;
+    public const int MIN_NAME_LENGTH = 4;      // TODO: Move these length values in a common spot. Used in multiple places
+    public const int MAX_NAME_LENGTH = 25;
 
     public int Id { get; set; }
 
@@ -20,7 +20,26 @@ public class Category
         }
     }
     
-    public decimal MonthlyAmount { get; set; }
-    public decimal GoalAmount { get; set; }
+    private decimal _monthlyAmount = 0m;
+    public decimal MonthlyAmount {
+        get => _monthlyAmount;
+        set
+        {
+            if (value < 0)
+                throw new ArgumentException("Monthly amount can not be a negative number");
+            _monthlyAmount = value;
+        }
+    }
+
+    private decimal _goalAmount = 0m;
+    public decimal GoalAmount {
+        get => _goalAmount;
+        set
+        {
+            if (value < 0)
+                throw new ArgumentException("Goal amount can not be a negative number");
+            _goalAmount = value;
+        }
+    }
     public Group? Group { get; set; }   // FIXME: Need to enforce that a category need to be a part of a group
 }
