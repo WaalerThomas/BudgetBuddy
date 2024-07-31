@@ -9,7 +9,7 @@ public class GroupTest
     [TestMethod]
     public void CreateGroup_WithValidName_ReturnsGroup()
     {
-        Group group = GroupController.CreateGroup("Expenses");
+        Group group = new() { Name = "Expenses" };
 
         Assert.AreEqual("Expenses", group.Name);
     }
@@ -19,7 +19,7 @@ public class GroupTest
     {
         try
         {
-            GroupController.CreateGroup("Bad");
+            _ = new Group { Name = "Bad" };
         }
         catch (ArgumentException ex)
         {
@@ -35,7 +35,7 @@ public class GroupTest
     {
         try
         {
-            GroupController.CreateGroup("This name is going to be way too long.");
+            _ = new Group { Name = "This name is going to be way too long." };
         }
         catch (ArgumentException ex)
         {
@@ -49,7 +49,7 @@ public class GroupTest
     [TestMethod]
     public void CreateGroup_NameAtMinLength_ReturnsGroup()
     {
-        Group group = GroupController.CreateGroup("Duck");
+        Group group = new() { Name = "Duck" };
 
         Assert.AreEqual("Duck", group.Name);
     }
@@ -57,8 +57,44 @@ public class GroupTest
     [TestMethod]
     public void CreateGroup_NameAtMaxLength_ReturnsGroup()
     {
-        Group group = GroupController.CreateGroup("Quack, said the duckling!");
+        Group group = new() { Name = "Quack, said the duckling!" };
 
         Assert.AreEqual("Quack, said the duckling!", group.Name);
+    }
+
+    [TestMethod]
+    public void Renaming_WithTooShortName_ThrowsException()
+    {
+        Group group = new() { Name = "Expenses" };
+
+        try
+        {
+            group.Name = "Bad";
+        }
+        catch (ArgumentException ex)
+        {
+            StringAssert.Contains(ex.Message, "Name is too short.");
+            return;
+        }
+
+        Assert.Fail("The expected exception was not thrown");
+    }
+
+    [TestMethod]
+    public void Renaming_WithTooLongName_ThrowsException()
+    {
+        Group group = new() { Name = "Expenses" };
+
+        try
+        {
+            group.Name = "This name is going to be way too long.";
+        }
+        catch (ArgumentException ex)
+        {
+            StringAssert.Contains(ex.Message, "Name is too long.");
+            return;
+        }
+
+        Assert.Fail("The expected exception was not thrown");
     }
 }

@@ -9,7 +9,7 @@ public class CategoryTest
     [TestMethod]
     public void CreateCategory_WithValidName_ReturnsCategory()
     {
-        Category category = CategoryController.CreateCategory("Gasoline");
+        Category category = new() { Name = "Gasoline" };
 
         Assert.AreEqual("Gasoline", category.Name);
     }
@@ -19,7 +19,7 @@ public class CategoryTest
     {
         try
         {
-            CategoryController.CreateCategory("Bad");
+            _ = new Category { Name = "Bad" };
         }
         catch (ArgumentException ex)
         {
@@ -35,7 +35,7 @@ public class CategoryTest
     {
         try
         {
-            CategoryController.CreateCategory("This name is going to be way too long.");
+            _ = new Category { Name = "This name is going to be way too long." };
         }
         catch (ArgumentException ex)
         {
@@ -49,7 +49,7 @@ public class CategoryTest
     [TestMethod]
     public void CreateCategory_NameAtMinLength_ReturnsCategory()
     {
-        Category category = CategoryController.CreateCategory("Duck");
+        Category category = new() { Name = "Duck" };
 
         Assert.AreEqual("Duck", category.Name);
     }
@@ -57,8 +57,44 @@ public class CategoryTest
     [TestMethod]
     public void CreateCategory_NameAtMaxLength_ReturnsCategory()
     {
-        Category category = CategoryController.CreateCategory("Quack, said the duckling!");
+        Category category = new() { Name = "Quack, said the duckling!" };
 
         Assert.AreEqual("Quack, said the duckling!", category.Name);
+    }
+
+    [TestMethod]
+    public void Renaming_WithTooShortName_ThrowsException()
+    {
+        Category category = new() { Name = "Gasoline" };
+
+        try
+        {
+            category.Name = "Bad";
+        }
+        catch (ArgumentException ex)
+        {
+            StringAssert.Contains(ex.Message, "Name is too short.");
+            return;
+        }
+
+        Assert.Fail("The expected exception was not thrown");
+    }
+
+    [TestMethod]
+    public void Renaming_WithTooLongName_ThrowsException()
+    {
+        Category category = new() { Name = "Gasoline" };
+
+        try
+        {
+            category.Name = "This name is going to be way too long.";
+        }
+        catch (ArgumentException ex)
+        {
+            StringAssert.Contains(ex.Message, "Name is too long.");
+            return;
+        }
+
+        Assert.Fail("The expected exception was not thrown");
     }
 }
