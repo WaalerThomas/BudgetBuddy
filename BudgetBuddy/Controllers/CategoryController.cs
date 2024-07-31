@@ -5,7 +5,7 @@ namespace BudgetBuddy.Controllers;
 public class CategoryController
 {
     public const int MIN_NAME_LENGTH = 4;       // TODO: Move these length values in a common spot. Used in multiple places
-    public const int MAX_NAME_LENGTH = 127;
+    public const int MAX_NAME_LENGTH = 25;
 
     public static Category CreateCategory(string name)
     {
