@@ -6,9 +6,5 @@ public class Category
     public required string Name { get; set; }
     public decimal MonthlyAmount { get; set; }
     public decimal GoalAmount { get; set; }
-
-    // TODO: Implement rest of this model
-
-    public int GroupId { get; set; }
-    public virtual Group? Group { get; set; }
+    public Group? Group { get; set; }
 }
