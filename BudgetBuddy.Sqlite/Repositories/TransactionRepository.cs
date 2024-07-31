@@ -20,4 +20,14 @@ public class TransactionRepository : Repository<Transaction>, ITransactionReposi
 
         DatabaseContext.Transactions.Add(transaction);
     }
+
+    public decimal GetCashFlowSum()
+    {
+        var cashflowEntries = DatabaseContext.Transactions
+            .Where(t => t.TransactionType.Id == TransactionTypeEnum.BalanceAdjustment)
+            .Select(t => t.Amount)
+            .ToList();
+
+        return cashflowEntries.Sum();
+    }
 }
