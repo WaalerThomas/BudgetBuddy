@@ -2,6 +2,13 @@ namespace BudgetBuddy.Simple;
 
 public static class Utils
 {
+    public static void PauseConsole()
+    {
+        Console.WriteLine();
+        Console.WriteLine("Press ENTER to continue");
+        Console.ReadLine();
+    }
+
     /// <summary>
     /// Method <c>MenuSelector</c> displays a numbered menu, selection message, and an optional menu header to the console, then waits for the user to select one of the menu options.
     /// </summary>
