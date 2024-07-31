@@ -24,7 +24,10 @@ public class AccountTest
         catch (ArgumentException ex)
         {
             StringAssert.Contains(ex.Message, "Name is too short.");
+            return;
         }
+
+        Assert.Fail("The expected exception was not thrown");
     }
 
     [TestMethod]
@@ -37,7 +40,10 @@ public class AccountTest
         catch (ArgumentException ex)
         {
             StringAssert.Contains(ex.Message, "Name is too long.");
+            return;
         }
+
+        Assert.Fail("The expected exception was not thrown");
     }
 
     [TestMethod]
