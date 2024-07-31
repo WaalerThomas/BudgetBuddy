@@ -97,4 +97,60 @@ public class CategoryTest
 
         Assert.Fail("The expected exception was not thrown");
     }
+
+    [TestMethod]
+    public void ChangingMonthlyAmount_ToAPositiveNumber_SetsMonthlyAmount()
+    {
+        Category category = new() { Name = "Gasoline" };
+
+        category.MonthlyAmount = 1500;
+
+        Assert.AreEqual(1500, category.MonthlyAmount, 0.001m);
+    }
+
+    [TestMethod]
+    public void ChangingMonthlyAmount_ToANegativeNumber_ThrowsException()
+    {
+        Category category = new() { Name = "Gasoline" };
+
+        try
+        {
+            category.MonthlyAmount = -400;
+        }
+        catch (ArgumentException ex)
+        {
+            StringAssert.Contains(ex.Message, "Monthly amount can not be a negative number");
+            return;
+        }
+
+        Assert.Fail("The expected exception was not thrown");
+    }
+
+    [TestMethod]
+    public void ChangingGoalAmount_ToAPositiveNumber_SetsGoalAmount()
+    {
+        Category category = new() { Name = "Gasoline" };
+
+        category.GoalAmount = 200;
+
+        Assert.AreEqual(200, category.GoalAmount, 0.001m);
+    }
+
+    [TestMethod]
+    public void ChangingGoalAmount_ToANegativeNumber_ThrowsException()
+    {
+        Category category = new() { Name = "Gasoline" };
+
+        try
+        {
+            category.GoalAmount = -20;
+        }
+        catch (ArgumentException ex)
+        {
+            StringAssert.Contains(ex.Message, "Goal amount can not be a negative number");
+            return;
+        }
+
+        Assert.Fail("The expected exception was not thrown");
+    }
 }
