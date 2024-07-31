@@ -49,20 +49,6 @@ public class DatabaseContext : DbContext
             });
         }
 
-        /*
-        modelBuilder.Entity<TransactionStatus>()
-            .HasMany(e => e.Transactions)
-            .WithOne(e => e.TransactionStatus)
-            .HasForeignKey("TransactionStatusId")
-            .IsRequired(true);
-        
-        modelBuilder.Entity<TransactionType>()
-            .HasMany(e => e.Transactions)
-            .WithOne(e => e.TransactionType)
-            .HasForeignKey("TransactionTypeId")
-            .IsRequired(true);
-        */
-
         base.OnModelCreating(modelBuilder);
     }
 }
