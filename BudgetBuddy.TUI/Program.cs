@@ -1,7 +1,5 @@
 ﻿using System.Drawing;
 using System.Globalization;
-using System.Security.Cryptography;
-using BudgetBuddyCore;
 
 namespace BudgetBuddyTUI;
 
@@ -27,7 +25,6 @@ public class Program
 
     bool applicationShouldClose;
 
-    Application application;
     ApplicationState applicationState;
     ApplicationBuffer windowBuffer;
 
@@ -40,9 +37,6 @@ public class Program
 
     public Program()
     {
-        application = new Application();
-        application.AddAccount("Bitch");
-        application.AddAccount("Something");
         applicationState = ApplicationState.Normal;
 
         consoleWidth = Console.BufferWidth;

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\BudgetBuddy_Core\BudgetBuddy_Core.csproj" />
+    <ProjectReference Include="..\BudgetBuddy\BudgetBuddy.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
