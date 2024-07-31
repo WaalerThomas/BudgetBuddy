@@ -1,10 +1,10 @@
-namespace BudgetBuddyTest;
+namespace BudgetBuddy.Test;
 
 [TestClass]
 public class AccountTest
 {
     [TestMethod]
-    public void Create_WithName_CreatesAnAccount()
+    public void CreateAccount_WithValidName_ReturnsAccount()
     {
         /*
         Application application = new Application();
