@@ -22,70 +22,12 @@ public class AccountRespository : Repository<Account>, IAccountRepository
     {
     }
 
-    public override Account? Get(int id)
-    {
-        // TODO: Look into if there is a better approach to updating the balances.
-
-        // NOTE: I might want to not always do a bunch of queries to the database for everytime I just want to get accounts. Maybe move stuff to AccountController as a method that client
-        //       can call whenever they want the balances to recalculate (They can know how old )
-        /*
-        Account? account = DatabaseContext.Find<Account>(id);
-        if (account is not null)
-        {
-            // Recalculate the pending- and settled balance
-            var pendingBalance = DatabaseContext.Transactions
-                .Where(t => t.Account!.Id == id
-                    && t.TransactionStatus.Id == TransactionStatusEnum.Pending
-                    && ((account.OldestPendingDate == null) || t.EntryDate >= account.OldestPendingDate))
-                .OrderBy(t => t.EntryDate)
-                .Select(t => new { t.EntryDate, t.Amount })
-                .ToList();
-
-            decimal pendingDiff = pendingBalance.Sum(t => t.Amount) - account.PendingBalance;
-
-            DateTime? settledDateTime = account.CalculatedSettledDate;
-            if (pendingDiff != 0)
-            {
-                // Pending entry has turned to settled. Need to recalculate from there
-                settledDateTime = account.OldestPendingDate;
-            }
-
-            var settledBalance = DatabaseContext.Transactions
-                .Where(t => t.Account!.Id == id
-                    && t.TransactionStatus.Id == TransactionStatusEnum.Settled
-                    && ((account.OldestPendingDate == null) || t.EntryDate >= settledDateTime))
-                .Select(t => t.Amount).ToList();
-        
-            decimal settledDiff = settledBalance.Sum() - account.SettledBalance;
-
-            if (settledDiff != 0 || pendingDiff != 0)
-            {
-                account.SettledBalance += settledDiff;
-                account.PendingBalance += pendingDiff;
-                account.CalculatedSettledDate = DateTime.Now;
-                account.OldestPendingDate = pendingBalance.FirstOrDefault()?.EntryDate;
-
-                // Update the Account in database since we don't want to give that job to the caller.
-                // Also cannot use the callers uow, since we don't know if they have done changes that they
-                // don't want to be sendt to the database yet.
-                var uow = new UnitOfWork(new DatabaseContext());
-                Account saveAccount = uow.Accounts.Find(a => a.Id == account.Id).Single();
-                AccountController.CopyFromTo(account, saveAccount);
-                uow.Complete();
-            }
-        }
-        return account;
-        */
-
-        return base.Get(id);
-    }
-
     public override IEnumerable<Account> GetAll()
     {
         // NOTE: I've implemented so that it only grabs entries from a certain datetime to present datetime because amount is stored as
         //       TEXT, which Sqlite cannot sum, so i am limiting the entries returned that gets summed in code.
 
-        // TODO: Look into if we actually need CalculatedSettledDate
+        // TODO: Problem, I am trying to optimize stuff too soon, which is making systems too complicated for no reason. Just implement easy, and then profile it to optimize later.
 
         var uow = new UnitOfWork(new DatabaseContext());
 
@@ -95,6 +37,33 @@ public class AccountRespository : Repository<Account>, IAccountRepository
             if (account is null)    // Shouldnt really be anyone that is null
                 continue;
             
+            var pendingBalance = DatabaseContext.Transactions
+                .Where(t => t.Account!.Id == account.Id
+                    && t.TransactionStatus.Id == TransactionStatusEnum.Pending)
+                .Select(t => t.Amount)
+                .ToList()
+                .Sum();
+            var settledBalance = DatabaseContext.Transactions
+                .Where(t => t.Account!.Id == account.Id
+                    && t.TransactionStatus.Id == TransactionStatusEnum.Settled)
+                .Select(t => t.Amount)
+                .ToList()
+                .Sum();
+            
+            // If the calculated balance is different than the saved balance, update the saved balance
+            if (account.PendingBalance != pendingBalance || account.SettledBalance != settledBalance)
+            {
+                account.SettledBalance = settledBalance;
+                account.PendingBalance = pendingBalance;
+
+                // Update the Account in database since we don't want to give that job to the caller.
+                // Also cannot use the callers uow, since we don't know if they have done changes that they
+                // don't want to be sendt to the database yet.
+                Account saveAccount = uow.Accounts.Find(a => a.Id == account.Id).Single();
+                AccountController.CopyFromTo(account, saveAccount);
+                uow.Complete();
+            }
+            /*
             var pendingBalance = DatabaseContext.Transactions
                 .Where(t => t.Account!.Id == account.Id
                     && t.TransactionStatus.Id == TransactionStatusEnum.Pending
@@ -131,6 +100,7 @@ public class AccountRespository : Repository<Account>, IAccountRepository
                 AccountController.CopyFromTo(account, saveAccount);
                 uow.Complete();
             }
+            */
         }
 
         return base.GetAll();

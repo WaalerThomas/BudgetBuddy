@@ -1,5 +1,6 @@
 using BudgetBuddy.Models;
 using BudgetBuddy.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Sqlite.Repositories;
 
@@ -29,5 +30,15 @@ public class TransactionRepository : Repository<Transaction>, ITransactionReposi
             .ToList();
 
         return cashflowEntries.Sum();
+    }
+
+    public IEnumerable<Transaction> GetAllWithExtra()
+    {
+        return DatabaseContext.Transactions
+            .Include(t => t.TransactionType)
+            .Include(t => t.Category)
+            .Include(t => t.Account)
+            .Include(t => t.TransactionStatus)
+            .ToList();
     }
 }
