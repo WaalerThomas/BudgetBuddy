@@ -1,5 +1,11 @@
 namespace BudgetBuddy.Simple;
 
+public struct Point
+{
+    public int x { get; set; }
+    public int y { get; set; }
+}
+
 public static class Utils
 {
     public static void PauseConsole()
@@ -52,8 +58,7 @@ public static class Utils
             if (readString == cancelString.ToLower())
                 return -1;
 
-            int selection;
-            bool failedToParse = ! int.TryParse(readString, out selection);
+            bool failedToParse = !int.TryParse(readString, out int selection);
             if (failedToParse)
             {
                 Console.WriteLine(enterNumberMessage);
@@ -119,7 +124,6 @@ public static class Utils
     {
         Console.WriteLine($"{message} (or '{cancelString}' to cancel)");
 
-        decimal value;
         string? readString;
         while (true)
         {
@@ -130,10 +134,37 @@ public static class Utils
             if (readString.ToLower() == cancelString.ToLower())
                 return null;
             
-            if (decimal.TryParse(readString, out value))
+            if (decimal.TryParse(readString, out decimal value))
                 return value;
             else
                 Console.WriteLine("Not a valid decimal number");
+        }
+    }
+
+    public static DateOnly? GetDateInput(string message, string cancelString = "cancel")
+    {
+        Console.WriteLine($"{message} or ENTER for todays date (or '{cancelString}' to cancel)");
+
+        string? readString;
+        while (true)
+        {
+            readString = Console.ReadLine()?.Trim();
+            if (readString == null)
+            {
+                Console.WriteLine("EMPOTY");
+                continue;
+            }
+
+            if (readString.Length == 0)
+                return DateOnly.FromDateTime(DateTime.Now);
+            
+            if (readString.ToLower() == cancelString.ToLower())
+                return null;
+
+            if (DateOnly.TryParse(readString, out DateOnly newDate))
+                return newDate;
+            else
+                Console.WriteLine("Not a valid date format");
         }
     }
 
@@ -201,5 +232,20 @@ public static class Utils
         }
 
         Console.SetCursorPosition(x, y);
+    }
+
+    /// <summary>
+    /// Clears the whole line on a given y. Sets the cursor position to the start of line <c>y</c> when finished clearing.
+    /// </summary>
+    /// <param name="y"></param>
+    public static void ClearLine(int y)
+    {
+        // TODO: Check that the y is inside the bounds. 
+
+        Console.SetCursorPosition(0, y);
+        string lineText = new(' ', Console.BufferWidth);
+        Console.WriteLine(lineText);
+
+        Console.SetCursorPosition(0, y);
     }
 }

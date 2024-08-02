@@ -20,11 +20,11 @@ public class GroupsCategoriesMenu : IBaseMenu
         ];
     }
 
-    public void ShowMenu(int menuStartX, int menuStartY)
+    public void ShowMenu(Point menuStartPosition, Point aToBStartPosition)
     {
         do
         {
-            Utils.ClearScreen(menuStartX, menuStartY, Console.BufferWidth, Console.BufferHeight);
+            Utils.ClearScreen(menuStartPosition.x, menuStartPosition.y, Console.BufferWidth, Console.BufferHeight);
 
             int optionSelected = Utils.MenuSelector(menuItems: menuItems, headerMessage: "Groups & Categories Menu", cancelString: "back");
             if (optionSelected == -1)

@@ -19,12 +19,12 @@ public class AccountsMenu : IBaseMenu
         ];
     }
 
-    public void ShowMenu(int menuStartX, int menuStartY)
+    public void ShowMenu(Point menuStartPosition, Point aToBStartPosition)
     {
         int optionSelected;
         do
         {
-            Utils.ClearScreen(menuStartX, menuStartY, Console.BufferWidth, Console.BufferHeight);
+            Utils.ClearScreen(menuStartPosition.x, menuStartPosition.y, Console.BufferWidth, Console.BufferHeight);
 
             optionSelected = Utils.MenuSelector(menuItems: menuItems, headerMessage: "Accounts Menu", cancelString: "back");
             if (optionSelected == -1)
@@ -43,7 +43,7 @@ public class AccountsMenu : IBaseMenu
                     MenuActionRenameAccount();
                     break;
                 case 4:
-                    MenuActionAdjustAccountBalance();
+                    MenuActionAdjustAccountBalance(aToBStartPosition.y);
                     break;
                 default:
                     Console.WriteLine("This option is not being handled yet.");
@@ -137,7 +137,7 @@ public class AccountsMenu : IBaseMenu
         Utils.PauseConsole();
     }
 
-    private static void MenuActionAdjustAccountBalance()
+    private static void MenuActionAdjustAccountBalance(int aToBPositionY)
     {
         using var uow = new UnitOfWork(new DatabaseContext());
         List<Account> accounts = uow.Accounts.GetAll().ToList();
@@ -172,6 +172,14 @@ public class AccountsMenu : IBaseMenu
         uow.Complete();
 
         Console.WriteLine($"Adjusting balance by {value:C}. New balance: {account.ActualBalance:C}");
+
+        // Updated the "Available to Budget"
+        (int x, int y) = Console.GetCursorPosition();
+        Utils.ClearLine(aToBPositionY);
+        decimal availableToBudget = TransactionController.GetAvailableToBudget(uow);
+        Console.WriteLine($"Available To Budget: {availableToBudget:C}");
+        Console.SetCursorPosition(x, y);
+
         Utils.PauseConsole();
     }
 }

@@ -1,4 +1,7 @@
-﻿using BudgetBuddy.Simple.Menus;
+﻿using System.Globalization;
+using BudgetBuddy.Controllers;
+using BudgetBuddy.Simple.Menus;
+using BudgetBuddy.Sqlite;
 
 namespace BudgetBuddy.Simple;
 
@@ -9,8 +12,8 @@ internal class Program
     readonly string[] mainMenu;
     readonly IBaseMenu[] menus;
 
-    int menuStartX;
-    int menuStartY;
+    Point menuStartPosition;
+    Point aToBStartPosition;
 
     public Program()
     {
@@ -19,17 +22,18 @@ internal class Program
             "Accounts",
             "Groups & Categories",
             "Transactions",
-            //"Category Transfers",
+            "Category Transfers",
             //"Settings"                                // TODO: This will be for setting formats (time, currency, date, etc)
         ];
         menus = [
             new AccountsMenu(),
             new GroupsCategoriesMenu(),
             new TransactionsMenu(),
+            new CategoryTransfersMenu(),
         ];
 
-        menuStartX = 0;
-        menuStartY = 0;
+        menuStartPosition = new();
+        aToBStartPosition = new();
 
         StartApplicationLoop();
     }
@@ -43,14 +47,23 @@ internal class Program
             Console.WriteLine("Created by Thomas Waaler");
             Console.WriteLine();
 
-            (menuStartX, menuStartY) = Console.GetCursorPosition();
+            (aToBStartPosition.x, aToBStartPosition.y) = Console.GetCursorPosition();
+
+            using (var uow = new UnitOfWork(new DatabaseContext()))
+            {
+                decimal availableToBudget = TransactionController.GetAvailableToBudget(uow);
+                Console.WriteLine($"Available To Budget: {availableToBudget:C}");
+                Console.WriteLine();
+            }
+
+            (menuStartPosition.x, menuStartPosition.y) = Console.GetCursorPosition();
             ShowMainMenu();
         }
     }
 
     void ShowMainMenu()
     {
-        Utils.ClearScreen(menuStartX, menuStartY, Console.BufferWidth, Console.BufferHeight);
+        Utils.ClearScreen(menuStartPosition.x, menuStartPosition.y, Console.BufferWidth, Console.BufferHeight);
 
         int optionSelected = Utils.MenuSelector(menuItems: mainMenu);
         if (optionSelected == -1)
@@ -61,7 +74,7 @@ internal class Program
 
         Console.WriteLine();
         if (optionSelected <= menus.Length)
-            menus[optionSelected - 1].ShowMenu(menuStartX, menuStartY);
+            menus[optionSelected - 1].ShowMenu(menuStartPosition, aToBStartPosition);
         else
         {
             Console.WriteLine("This option is not being handled yet.");
@@ -71,6 +84,10 @@ internal class Program
 
     static void Main(string[] args)
     {
+        // FIXME: Add to settings a way to change the formating of currency
+        CultureInfo info = new CultureInfo("nb-NO");
+        Thread.CurrentThread.CurrentCulture = info;
+
         _ = new Program();
     }
 }
