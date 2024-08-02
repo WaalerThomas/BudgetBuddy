@@ -12,3 +12,8 @@ Application, using a simple text based user interface. Used while creating the b
 Application, using a more complex text based user interface. Currently on hold while I develop the backend.
 ## BudgetBuddy.Test
 Testing
+
+# Problems
+Note: Not going to write them all here.
+
+* Trying to optimize too much while writing code, thinking too far into the future. For example the "caching" og balance on accounts. Techniquely I could just calculate that data from the transactions in the database whenever I wanted to see them.
