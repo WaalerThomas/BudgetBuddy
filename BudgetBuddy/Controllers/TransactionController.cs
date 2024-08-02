@@ -1,4 +1,5 @@
 using BudgetBuddy.Models;
+using BudgetBuddy.Repositories;
 
 namespace BudgetBuddy.Controllers;
 
@@ -22,6 +23,14 @@ public class TransactionController
         };
     }
 
+    public static decimal GetAvailableToBudget(IUnitOfWork uow)
+    {
+        decimal cashflow = uow.Transactions.GetCashFlowSum();
+        decimal aToBTransfers = 0m;
+
+        return cashflow + aToBTransfers;
+    }
+
     // TODO: Make up a better name, it is way too long
     public static Transaction CreateAdjustingAccountTransaction(Account account, decimal amount)
     {
@@ -31,11 +40,28 @@ public class TransactionController
 
         return new Transaction()
         {
-            EntryDate = DateTime.Now,
+            EntryDate = DateOnly.FromDateTime(DateTime.Now),
             TransactionType = TypeFromEnum(TransactionTypeEnum.BalanceAdjustment),
             Amount = amount,
             Account = account,
             TransactionStatus = StatusFromEnum(TransactionStatusEnum.Settled),
+        };
+    }
+
+    public static Transaction CreateCategoryTransaction(DateOnly entryDate, Account account, Category category, decimal amount, TransactionStatusEnum transactionStatus)
+    {
+        // TODO: Finish implementation
+
+        account.SettledBalance += amount;
+        
+        return new Transaction()
+        {
+            EntryDate = entryDate,
+            TransactionType = TypeFromEnum(TransactionTypeEnum.Category),
+            Amount = amount < 0 ? amount : -amount,                         // The amount needs to be represented as a negative number
+            Category = category,
+            Account = account,
+            TransactionStatus = StatusFromEnum(transactionStatus),
         };
     }
 }
