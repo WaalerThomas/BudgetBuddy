@@ -11,6 +11,7 @@ public class UnitOfWork : IUnitOfWork
     public IGroupRepository Groups { get; private set; }
     public ICategoryRepository Categories { get; private set; }
     public ITransactionRepository Transactions { get; private set; }
+    public ICategoryTransferRepository CategoryTransfers { get; private set; }
 
     public UnitOfWork(DatabaseContext context)
     {
@@ -19,6 +20,7 @@ public class UnitOfWork : IUnitOfWork
         Groups = new GroupRepository(_context);
         Categories = new CategoryRepository(_context);
         Transactions = new TransactionRepository(_context);
+        CategoryTransfers = new CategoryTransferRepository(_context);
     }
 
     public int Complete()

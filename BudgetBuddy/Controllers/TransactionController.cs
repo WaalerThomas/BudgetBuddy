@@ -1,5 +1,4 @@
 using BudgetBuddy.Models;
-using BudgetBuddy.Repositories;
 
 namespace BudgetBuddy.Controllers;
 
@@ -26,7 +25,7 @@ public class TransactionController
     public static decimal GetAvailableToBudget(IUnitOfWork uow)
     {
         decimal cashflow = uow.Transactions.GetCashFlowSum();
-        decimal aToBTransfers = 0m;
+        decimal aToBTransfers = uow.CategoryTransfers.GetCashFlowSum();
 
         return cashflow + aToBTransfers;
     }

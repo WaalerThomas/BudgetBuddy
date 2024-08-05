@@ -10,6 +10,7 @@ public class CategoryTransferType
 
 public enum CategoryTransferTypeEnum
 {
-    AvailableToBudget,
+    IntoAvailableToBudget,
+    FromAvailableToBudget,
     FromCategory
 }

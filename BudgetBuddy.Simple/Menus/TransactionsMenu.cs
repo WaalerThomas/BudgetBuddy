@@ -12,6 +12,7 @@ public class TransactionsMenu : IBaseMenu
     {
         menuItems = [
             "List Transactions",
+            "List pending transactions",
             "Add a transaction"
             //"Show last reconciliation",
             //"Show activity data"
@@ -36,6 +37,9 @@ public class TransactionsMenu : IBaseMenu
                     MenuActionListTransactions();
                     break;
                 case 2:
+                    MenuActionListPending();
+                    break;
+                case 3:
                     MenuActionAddTransaction(aToBStartPosition.y);
                     break;
                 default:
@@ -48,8 +52,26 @@ public class TransactionsMenu : IBaseMenu
 
     private static void MenuActionListTransactions()
     {
-        var uow = new UnitOfWork(new DatebaseContext());
+        var uow = new UnitOfWork(new DatabaseContext());
         List<Transaction> transactionsCopy = uow.Transactions.GetAllWithExtra().ToList();
+
+        Console.WriteLine("Transactions:");
+        if (transactionsCopy.Count == 0)
+            Console.WriteLine("No transactions have been registered");
+        else
+        {
+            Console.WriteLine("Id".PadRight(10) + "Date".PadRight(12) + "Type".PadRight(20) + "Amount".PadRight(20) + "Category".PadRight(20) + "Account".PadRight(20) + "Status".PadRight(12));
+            foreach (var t in transactionsCopy)
+                Console.WriteLine($"{t.Id,-10}{t.EntryDate,-12}{t.TransactionType.Name,-20}{t.Amount,-20:C}{t.Category?.Name,-20}{t.Account?.Name,-20}{t.TransactionStatus.Name,-12}");
+        }
+
+        Utils.PauseConsole();
+    }
+
+    private static void MenuActionListPending()
+    {
+        var uow = new UnitOfWork(new DatabaseContext());
+        List<Transaction> transactionsCopy = uow.Transactions.GetAllPendingWithExtra().ToList();
 
         Console.WriteLine("Transactions:");
         if (transactionsCopy.Count == 0)
@@ -76,6 +98,9 @@ public class TransactionsMenu : IBaseMenu
         if (selectedDate is null)
             return;
 
+        Console.WriteLine($"Selected transaction date '{selectedDate}'");
+        Console.WriteLine();
+
         // Selecting an account
         // FIXME: Getting selection input from the user is being reused a lot. Can we make some parts of it into functions?
         List<Account> accounts = uow.Accounts.GetAll().ToList();
@@ -85,9 +110,6 @@ public class TransactionsMenu : IBaseMenu
             Utils.PauseConsole();
             return;
         }
-
-        Console.WriteLine($"Selected transaction date '{selectedDate}'");
-        Console.WriteLine();
 
         string[] accountNames = accounts.Where(a => a != null).Select(a => a.Name).ToArray();
         int menuSelection = Utils.MenuSelector(
@@ -165,8 +187,4 @@ public class TransactionsMenu : IBaseMenu
 
         Utils.PauseConsole();
     }
-}
-
-internal class DatebaseContext : DatabaseContext
-{
 }

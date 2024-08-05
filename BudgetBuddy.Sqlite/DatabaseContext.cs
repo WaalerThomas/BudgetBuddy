@@ -9,9 +9,11 @@ public class DatabaseContext : DbContext
     public DbSet<Group> Groups { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<CategoryTransfer> CategoryTransfers { get; set; }
 
     public DbSet<TransactionStatus> TransactionStatuses { get; set; }
     public DbSet<TransactionType> TransactionTypes { get; set; }
+    public DbSet<CategoryTransferType> CategoryTransferTypes { get; set; }
 
     public string DbPath { get; }
 
@@ -46,6 +48,16 @@ public class DatabaseContext : DbContext
             {
                 Id = transactionType,
                 Name = transactionType.ToString()
+            });
+        }
+
+        // Seed database with all types for category transfer
+        foreach (var categoryTransferType in Enum.GetValues(typeof(CategoryTransferTypeEnum)).Cast<CategoryTransferTypeEnum>())
+        {
+            modelBuilder.Entity<CategoryTransferType>().HasData(new CategoryTransferType()
+            {
+                Id = categoryTransferType,
+                Name = categoryTransferType.ToString()
             });
         }
 

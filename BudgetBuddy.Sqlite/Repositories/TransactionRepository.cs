@@ -27,14 +27,25 @@ public class TransactionRepository : Repository<Transaction>, ITransactionReposi
         var cashflowEntries = DatabaseContext.Transactions
             .Where(t => t.TransactionType.Id == TransactionTypeEnum.BalanceAdjustment)
             .Select(t => t.Amount)
-            .ToList();
+            .ToList().Sum();
 
-        return cashflowEntries.Sum();
+        return cashflowEntries;
     }
 
     public IEnumerable<Transaction> GetAllWithExtra()
     {
         return DatabaseContext.Transactions
+            .Include(t => t.TransactionType)
+            .Include(t => t.Category)
+            .Include(t => t.Account)
+            .Include(t => t.TransactionStatus)
+            .ToList();
+    }
+
+    public IEnumerable<Transaction> GetAllPendingWithExtra()
+    {
+        return DatabaseContext.Transactions
+            .Where(t => t.TransactionStatus.Id == TransactionStatusEnum.Pending)
             .Include(t => t.TransactionType)
             .Include(t => t.Category)
             .Include(t => t.Account)

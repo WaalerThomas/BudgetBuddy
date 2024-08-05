@@ -7,4 +7,5 @@ public class CategoryTransfer
     public required decimal Amount { get; set; }
     public required Category? FromCategory { get; set; }
     public required Category? ToCategory { get; set; }
+    public required CategoryTransferType TransferType { get; set; }
 }

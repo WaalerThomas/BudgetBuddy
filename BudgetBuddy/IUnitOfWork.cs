@@ -8,5 +8,6 @@ public interface IUnitOfWork : IDisposable
     IGroupRepository Groups { get; }
     ICategoryRepository Categories { get; }
     ITransactionRepository Transactions { get; }
+    ICategoryTransferRepository CategoryTransfers { get; }
     int Complete();
 }
