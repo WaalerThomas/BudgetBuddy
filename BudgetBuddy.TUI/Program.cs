@@ -1,7 +1,9 @@
 ﻿using System.Drawing;
 using System.Globalization;
 
-namespace BudgetBuddyTUI;
+namespace BudgetBuddy.TUI;
+
+// TODO: Need a better system for knowing which parts to redraw.
 
 public enum ApplicationState
 {
@@ -32,6 +34,7 @@ public class Program
 
     Rectangle dateElement;
     Rectangle headerInfoElement;
+    Rectangle headerStateElement;
     Rectangle footerElement;
     Rectangle pageElement;
 
@@ -51,7 +54,10 @@ public class Program
         int headerHeight = 3;
         dateElement = new Rectangle(0, 0, 15, headerHeight);
         int remainingWidth = consoleWidth - dateElement.Width + 1;
-        headerInfoElement = new Rectangle(dateElement.Right - 1, 0, remainingWidth, headerHeight);
+        headerInfoElement = new Rectangle(dateElement.Right - 1, 0, remainingWidth - 12, headerHeight);
+        remainingWidth = remainingWidth - headerInfoElement.Width;
+        headerStateElement = new Rectangle(headerInfoElement.Right - 1, 0, remainingWidth, headerHeight);
+
         footerElement = new Rectangle(0, consoleHeight - headerHeight, consoleWidth, headerHeight);
         pageElement = new Rectangle(0, dateElement.Bottom, consoleWidth, footerElement.Top - dateElement.Bottom);
 
@@ -65,7 +71,7 @@ public class Program
     {
         while (! applicationShouldClose)
         {
-            DrawApplicationBuffer();
+            windowBuffer.DrawBuffer();
             HandleInput();
         }
     }
@@ -94,30 +100,28 @@ public class Program
                 case ConsoleKey.F5:
                     SetPage("Configuration");
                     break;
-                case ConsoleKey.Q:
-                    windowBuffer.Clear(new Rectangle(
-                        0, 3,
-                        consoleWidth, consoleHeight - 6
-                    ));
-                    break;
                 case ConsoleKey.Escape:
                     Console.SetCursorPosition(0, consoleHeight);
                     applicationShouldClose = true;
+                    break;
+                case ConsoleKey.Tab:
+                    applicationState = ApplicationState.Insert;
+                    AddHeader();
                     break;
             }
         }
         else if (applicationState == ApplicationState.Insert)
         {
-        }
-    }
+            Console.SetCursorPosition(consoleWidth, consoleHeight);
+            var readInput = Console.ReadKey();
 
-    private void DrawApplicationBuffer()
-    {
-        Console.Clear();
-        for (int i = 0; i < consoleHeight; i++)
-        {
-            Console.SetCursorPosition(0, i);
-            Console.Write( windowBuffer.BufferLine(i) );
+            switch (readInput.Key)
+            {
+                case ConsoleKey.Tab:
+                    applicationState = ApplicationState.Normal;
+                    AddHeader();
+                    break;
+            }
         }
     }
 
@@ -131,13 +135,15 @@ public class Program
 
         string dateHorizontalLine = new string('─', dateElement.Width - 2);
         string budgetHorizontalLine = new string('─', headerInfoElement.Width - 2);
+        string stateHorizontalLine = new('─', headerStateElement.Width - 2);
 
         // Constructing the borders
-        windowBuffer.Insert(dateElement.Left, dateElement.Top, string.Format("┌{0}┬{1}┐", dateHorizontalLine, budgetHorizontalLine));
+        windowBuffer.Insert(dateElement.Left, dateElement.Top, string.Format("┌{0}┬{1}┬{2}┐", dateHorizontalLine, budgetHorizontalLine, stateHorizontalLine));
         windowBuffer.Insert(dateElement.Left, dateElement.Top + 1, "│");
         windowBuffer.Insert(headerInfoElement.Left, headerInfoElement.Top + 1, "│");
-        windowBuffer.Insert(headerInfoElement.Right - 1, headerInfoElement.Top + 1, "│");
-        windowBuffer.Insert(dateElement.Left, dateElement.Bottom - 1, string.Format("└{0}┴{1}┘", dateHorizontalLine, budgetHorizontalLine));
+        windowBuffer.Insert(headerStateElement.Left, headerStateElement.Top + 1, "│");
+        windowBuffer.Insert(headerStateElement.Right - 1, headerStateElement.Top + 1, "│");
+        windowBuffer.Insert(dateElement.Left, dateElement.Bottom - 1, string.Format("└{0}┴{1}┴{2}┘", dateHorizontalLine, budgetHorizontalLine, stateHorizontalLine));
 
         // Inserting the content
         DateTime dateTime = DateTime.Today;
@@ -148,11 +154,13 @@ public class Program
         CultureInfo cultureInfoNO = CultureInfo.GetCultureInfo("nb-NO");
         string budgetValue = string.Format(cultureInfoNO, "{0:C}", testValue).PadRight(12);
         windowBuffer.Insert(headerInfoElement.Left + 2, headerInfoElement.Top + 1, string.Format("Available to Budget: {0}", budgetValue));
+
+        ConsoleColor fg = applicationState == ApplicationState.Normal ? ConsoleColor.Green : ConsoleColor.Cyan;
+        windowBuffer.Insert(headerStateElement.Left + 2, headerInfoElement.Top + 1, applicationState.ToString(), new(){ Background = null, Foreground = fg});
     }
 
     private void AddFooter()
     {
-
         //Rectangle footer = new Rectangle(0, consoleHeight - footerHeight, consoleWidth, footerHeight);
         string horizontalLine = new string('─', footerElement.Width - 2);
 
@@ -162,7 +170,17 @@ public class Program
         windowBuffer.Insert(footerElement.Right - 1, footerElement.Top + 1, "│");
         windowBuffer.Insert(footerElement.Left, footerElement.Bottom - 1, string.Format("└{0}┘", horizontalLine));
 
-        windowBuffer.Insert(footerElement.Left + 2, footerElement.Top + 1, string.Format("F1 Dashboard   F2 Transactions   F3 Balances   F4 Category Transfers   F5 Configuration │ ESC Exit"));
+        BufferColor highlightedColor = new BufferColor(){ Foreground = ConsoleColor.Red, Background = null };
+        BufferColor defaultColor = new BufferColor();
+        List<ColoredText> coloredTexts = [
+            new("F1", highlightedColor),  new(" Dashboard   ", defaultColor),
+            new("F2", highlightedColor),  new(" Transactions   ", defaultColor),
+            new("F3", highlightedColor),  new(" Balances   ", defaultColor),
+            new("F4", highlightedColor),  new(" Category Transfers   ", defaultColor),
+            new("F5", highlightedColor),  new(" Configuration | ", defaultColor),
+            new("ESC", highlightedColor), new(" Exit", defaultColor)
+        ];
+        windowBuffer.Insert(footerElement.Left + 2, footerElement.Top + 1, coloredTexts);
     }
 
     private void SetPage(string pageName)
@@ -188,10 +206,10 @@ public class Program
     {
         int accountNameMaxLength = 25;
         int height = consoleHeight - dateElement.Height - footerElement.Height;
-        Rectangle accountsRect = new Rectangle(0, dateElement.Height, accountNameMaxLength, height / 3);
+        Rectangle accountsRect = new Rectangle(0, dateElement.Height, accountNameMaxLength, height / 2);
         accountsRect.X = consoleWidth - accountsRect.Width;
 
-        string horizontalLine = new string('─', accountsRect.Width - 2);
+        string horizontalLine = new('─', accountsRect.Width - 2);
 
         // Constructing the borders
         windowBuffer.Insert(accountsRect.Left, accountsRect.Top, string.Format("┌{0}┐", horizontalLine));
@@ -205,6 +223,7 @@ public class Program
         windowBuffer.Insert(accountsRect.Left + 2, accountsRect.Top + 1, "Accounts:");
         windowBuffer.Insert(accountsRect.Left, accountsRect.Top + 2, string.Format("├{0}┤", horizontalLine));
 
+        windowBuffer.Insert(10, 10, "Hello", new(){Foreground = ConsoleColor.DarkRed, Background = ConsoleColor.Green});
         /*
         List<Account> accounts = application.Accounts;
         for (int i = 0; i < accounts.Count; i++)
