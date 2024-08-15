@@ -75,9 +75,14 @@ public class GroupsCategoriesMenu : IBaseMenu
                     continue;
 
                 Console.WriteLine(seperatorLine);
-                Console.WriteLine("Name".PadRight(20) + "Monthly Amount".PadRight(20) + "Goal Amount".PadRight(20));
+                Console.WriteLine("Name".PadRight(20) + "Monthly Amount".PadRight(16) + "Goal Amount".PadRight(14) + "Available".PadRight(14) + "Activity".PadRight(14) + "Budgeted".PadRight(14));
                 foreach (var category in group.Categories!)
-                    Console.WriteLine($"{category.Name,-20}{category.MonthlyAmount,-20:C}{category.GoalAmount,-20:C}");
+                {
+                    decimal available = uow.Categories.GetAvailableAmount(category.Id);
+                    decimal activity = uow.Categories.GetActivityAmount(category.Id);
+                    decimal budgeted = uow.Categories.GetBudgetetAmount(category.Id);
+                    Console.WriteLine($"{category.Name,-20}{category.MonthlyAmount,-16:C}{category.GoalAmount,-14:C}{available,-14:C}{activity,-14:C}{budgeted,-14:C}");
+                }
                 
                 Console.WriteLine();
             }

@@ -145,7 +145,7 @@ public class TransactionsMenu : IBaseMenu
             return;
         
         Category category = categories[menuSelection - 1];
-        Console.WriteLine($"Selected category '{category.Name}'");
+        Console.WriteLine($"Selected category '{category.Name}' | Available: {uow.Categories.GetAvailableAmount(category.Id):C}");
         Console.WriteLine();
 
         // Select amount
@@ -171,8 +171,6 @@ public class TransactionsMenu : IBaseMenu
 
         Console.WriteLine($"Adding transaction '{selectedDate} {amount:C} {category.Name} {account.Name} {statusNames[menuSelection - 1]}'");
 
-        // TODO: Add the actual transaction to the database
-        // TODO: Make a better way to choose transaction status
         Transaction transaction = TransactionController.CreateCategoryTransaction((DateOnly)selectedDate, account, category, (decimal)amount, (TransactionStatusEnum)menuSelection - 1);
         uow.Transactions.Add(transaction);
         uow.Complete();
