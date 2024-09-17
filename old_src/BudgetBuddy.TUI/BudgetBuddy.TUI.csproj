@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BudgetBuddy\BudgetBuddy.csproj" />
+    <ProjectReference Include="..\BudgetBuddy.Sqlite\BudgetBuddy.Sqlite.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

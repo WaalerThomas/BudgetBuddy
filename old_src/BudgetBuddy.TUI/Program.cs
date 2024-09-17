@@ -1,6 +1,9 @@
 ﻿using System.Drawing;
 using System.Globalization;
 
+using BudgetBuddy.Models;
+using BudgetBuddy.Sqlite;
+
 namespace BudgetBuddy.TUI;
 
 // TODO: Need a better system for knowing which parts to redraw.
@@ -18,6 +21,16 @@ public enum Page
     Balances,
     CategoryTransfers,
     Configuration
+}
+
+public static class StringExt
+{
+    public static string? Truncate(this string? value, int maxLength, string truncationSuffix = "...")
+    {
+        return value?.Length > maxLength
+            ? value.Substring(0, maxLength - truncationSuffix.Length) + truncationSuffix
+            : value;
+    }
 }
 
 public class Program
@@ -52,10 +65,10 @@ public class Program
         currentPage = Page.Dashboard;
 
         int headerHeight = 3;
-        dateElement = new Rectangle(0, 0, 15, headerHeight);
+        dateElement = new Rectangle(0, 0, 16, headerHeight);
         int remainingWidth = consoleWidth - dateElement.Width + 1;
         headerInfoElement = new Rectangle(dateElement.Right - 1, 0, remainingWidth - 12, headerHeight);
-        remainingWidth = remainingWidth - headerInfoElement.Width;
+        remainingWidth = remainingWidth - headerInfoElement.Width + 1;
         headerStateElement = new Rectangle(headerInfoElement.Right - 1, 0, remainingWidth, headerHeight);
 
         footerElement = new Rectangle(0, consoleHeight - headerHeight, consoleWidth, headerHeight);
@@ -104,7 +117,7 @@ public class Program
                     Console.SetCursorPosition(0, consoleHeight);
                     applicationShouldClose = true;
                     break;
-                case ConsoleKey.Tab:
+                case ConsoleKey.I:
                     applicationState = ApplicationState.Insert;
                     AddHeader();
                     break;
@@ -117,7 +130,7 @@ public class Program
 
             switch (readInput.Key)
             {
-                case ConsoleKey.Tab:
+                case ConsoleKey.Escape:
                     applicationState = ApplicationState.Normal;
                     AddHeader();
                     break;
@@ -128,13 +141,8 @@ public class Program
     private void AddHeader()
     {
         // ┬ │ ┌ ┐ ─ └ ┘ ┴
-
-        //Rectangle dateRect = new Rectangle(0, 0, 15, headerHeight);
-        //int remainingWidth = consoleWidth - dateRect.Width + 1;
-        //Rectangle budgetRect = new Rectangle(dateRect.Right - 1, 0, remainingWidth, headerHeight);
-
-        string dateHorizontalLine = new string('─', dateElement.Width - 2);
-        string budgetHorizontalLine = new string('─', headerInfoElement.Width - 2);
+        string dateHorizontalLine = new('─', dateElement.Width - 2);
+        string budgetHorizontalLine = new('─', headerInfoElement.Width - 2);
         string stateHorizontalLine = new('─', headerStateElement.Width - 2);
 
         // Constructing the borders
@@ -223,18 +231,84 @@ public class Program
         windowBuffer.Insert(accountsRect.Left + 2, accountsRect.Top + 1, "Accounts:");
         windowBuffer.Insert(accountsRect.Left, accountsRect.Top + 2, string.Format("├{0}┤", horizontalLine));
 
-        windowBuffer.Insert(10, 10, "Hello", new(){Foreground = ConsoleColor.DarkRed, Background = ConsoleColor.Green});
-        /*
-        List<Account> accounts = application.Accounts;
-        for (int i = 0; i < accounts.Count; i++)
+        Rectangle tableRect = new(pageElement.Left, pageElement.Top, pageElement.Width - accountsRect.Width, pageElement.Height);
+        string tableLine = new('─', tableRect.Width - 2);
+
+        windowBuffer.Insert(tableRect.Left, tableRect.Top, string.Format("┌{0}┐", tableLine));
+        for (int i = 1; i < tableRect.Height - 1; i++)
         {
-            windowBuffer.Insert(accountsRect.Left + 2, accountsRect.Top + 3 + i, accounts[i].Name);
+            windowBuffer.Insert(tableRect.Left, tableRect.Top + i, "│");
+            windowBuffer.Insert(tableRect.Right - 1, tableRect.Top + i, "│");
         }
-        */
+        windowBuffer.Insert(tableRect.Left, tableRect.Bottom - 1, string.Format("└{0}┘", tableLine));
+
+        int categoryColumnSize = (tableRect.Width - 4) / 4;
+        int availableColumnSize = (tableRect.Width - 4 - categoryColumnSize) / 4;
+
+        int categoryX = tableRect.Left + 2;
+        int availableX = categoryX + categoryColumnSize;
+        int percentageX = availableX + availableColumnSize;
+        int activityX = percentageX + availableColumnSize;
+        int budgetedX = activityX + availableColumnSize;
+
+        windowBuffer.Insert(categoryX, tableRect.Top + 1, "Category");
+        windowBuffer.Insert(availableX, tableRect.Top + 1, "Available");
+        windowBuffer.Insert(activityX, tableRect.Top + 1, "Activity");
+        windowBuffer.Insert(budgetedX, tableRect.Top + 1, "Budgeted");
+
+        windowBuffer.Insert(tableRect.Left + 1, tableRect.Top + 2, new string('━', tableRect.Width - 2));
+
+        // Test adding the group and categories.
+        using var uow = new UnitOfWork(new DatabaseContext());
+        List<Group> groups = uow.Groups.GetAllWithCategories().ToList();
+
+        if (groups.Count == 0)
+        {
+            string noGroupsMsg = "No Groups or Categories have been registered";
+            windowBuffer.Insert(
+                tableRect.Left + (tableRect.Width / 2) - (noGroupsMsg.Length / 2),
+                tableRect.Top + 4,
+                noGroupsMsg
+            );
+        }
+        else
+        {
+            int elementY = tableRect.Top + 3;
+            for (int i = 0; i < groups.Count; i++)
+            {
+                if (i != 0)
+                {
+                    windowBuffer.Insert(categoryX, elementY, new string('╌', tableRect.Width - 4));
+                    elementY++;
+                }
+
+                windowBuffer.Insert(categoryX, elementY, groups[i].Name.PadRight(tableRect.Width - 4));
+                elementY++;
+
+                foreach (var category in groups[i].Categories)
+                {
+                    decimal available = uow.Categories.GetAvailableAmount(category.Id);
+                    decimal activity = uow.Categories.GetActivityAmount(category.Id);
+                    decimal budgeted = uow.Categories.GetBudgetetAmount(category.Id);
+                    windowBuffer.Insert(categoryX + 1, elementY, category.Name.Truncate(categoryColumnSize - 2)!);
+                    windowBuffer.Insert(availableX, elementY, $"{available:C}");
+                    windowBuffer.Insert(percentageX, elementY, $"{available / category.MonthlyAmount:P0}");
+                    windowBuffer.Insert(activityX, elementY, $"{activity:C}");
+                    windowBuffer.Insert(budgetedX, elementY, $"{budgeted:C}");
+                    elementY++;
+                }
+
+                // TODO: Add in a check so that we do not exceed the window
+            }
+        }
     }
 
     static void Main(string[] args)
     {
+        // FIXME: Add to settings a way to change the formating of currency
+        CultureInfo info = new CultureInfo("nb-NO");
+        Thread.CurrentThread.CurrentCulture = info;
+
         _ = new Program();
     }
 }
