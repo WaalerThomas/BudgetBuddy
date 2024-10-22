@@ -1,0 +1,19 @@
+﻿using AutoMapper;
+using BudgetBuddy.Account.Model;
+using BudgetBuddy.Account.ViewModel;
+using BudgetBuddy.Contracts.Model.Account;
+
+namespace BudgetBuddy.Account.AutoMapper;
+
+public class AccountProfile : Profile
+{
+    public AccountProfile()
+    {
+        CreateMap<AccountModel, AccountVm>();
+        CreateMap<AccountVm, AccountModel>()
+            .ForMember(x => x.CreatedAt, p => p.Ignore())
+            .ForMember(x => x.UpdatedAt, p => p.Ignore());
+
+        CreateMap<AccountModel, AccountDao>().ReverseMap();
+    }
+}
