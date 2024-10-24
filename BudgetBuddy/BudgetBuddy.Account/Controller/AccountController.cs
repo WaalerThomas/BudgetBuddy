@@ -3,6 +3,7 @@ using BudgetBuddy.Account.Service;
 using BudgetBuddy.Account.ViewModel;
 using BudgetBuddy.Contracts.Model.Account;
 using BudgetBuddy.Contracts.Model.Common;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBuddy.Account.Controller;
@@ -14,7 +15,9 @@ public class AccountController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IAccountService _accountService;
 
-    public AccountController(IAccountService accountService, IMapper mapper)
+    public AccountController(
+        IAccountService accountService,
+        IMapper mapper)
     {
         _accountService = accountService;
         _mapper = mapper;

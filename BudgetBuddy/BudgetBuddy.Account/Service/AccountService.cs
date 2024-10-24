@@ -2,25 +2,34 @@
 using BudgetBuddy.Account.Model;
 using BudgetBuddy.Account.Repositories;
 using BudgetBuddy.Contracts.Model.Account;
+using FluentValidation;
 
 namespace BudgetBuddy.Account.Service;
 
 public class AccountService : IAccountService
 {
     private readonly IMapper _mapper;
+    private readonly IAccountValidator _accountValidator;
     private readonly IAccountRepository _accountRepository;
     
-    public AccountService(IAccountRepository accountRepository, IMapper mapper)
+    public AccountService(
+        IAccountRepository accountRepository,
+        IMapper mapper,
+        IAccountValidator accountValidator)
     {
         _accountRepository = accountRepository;
         _mapper = mapper;
+        _accountValidator = accountValidator;
     }
 
     public AccountModel Create(AccountModel account)
     {
-        // TODO: Implement validation
+        _accountValidator.ValidateAndThrow(account);
+        var accountDao = _mapper.Map<AccountModel, AccountDao>(account);
         
-        var accountDao = _accountRepository.Create(_mapper.Map<AccountModel, AccountDao>(account));
-        return _mapper.Map<AccountDao, AccountModel>(accountDao);
+        accountDao = _accountRepository.Create(accountDao);
+        account = _mapper.Map<AccountDao, AccountModel>(accountDao);
+        
+        return account;
     }
 }

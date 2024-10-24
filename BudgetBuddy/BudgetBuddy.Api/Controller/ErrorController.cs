@@ -2,6 +2,7 @@
 using BudgetBuddy.Contracts.Enums;
 using BudgetBuddy.Contracts.Model.Common;
 using BudgetBuddy.Core.Exceptions;
+using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,9 +16,11 @@ public class ErrorController : ControllerBase
     {
         Exception? exception = HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
         
+        // TODO: Change exception class to also include a status code
         var (statusCode, message) = exception switch
         {
             BuddyException buddyException => (400, buddyException.Message),
+            ValidationException validationException => (400, validationException.Message),
             NotImplementedException => (501, "Not implemented"),
             _ => (500, "An error occurred")
         };

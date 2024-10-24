@@ -7,6 +7,6 @@ public class AccountValidator : AbstractValidator<AccountModel>, IAccountValidat
 {
     public AccountValidator()
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required.");
+        RuleFor(x => x.Name).NotEmpty();
     }
 }
