@@ -3,7 +3,6 @@ using BudgetBuddy.Account.Service;
 using BudgetBuddy.Account.ViewModel;
 using BudgetBuddy.Contracts.Model.Account;
 using BudgetBuddy.Contracts.Model.Common;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBuddy.Account.Controller;
@@ -29,6 +28,7 @@ public class AccountController : ControllerBase
         var accountModel = _mapper.Map<AccountVm, AccountModel>(account);
         accountModel = _accountService.Create(accountModel);
         
-        return new BuddyResponse<AccountVm>(_mapper.Map<AccountModel, AccountVm>(accountModel));
+        account = _mapper.Map<AccountModel, AccountVm>(accountModel);
+        return new BuddyResponse<AccountVm>(account);
     }
 }
