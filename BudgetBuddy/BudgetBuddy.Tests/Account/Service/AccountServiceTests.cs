@@ -1,6 +1,5 @@
-﻿using BudgetBuddy.Account.Repository;
+﻿using BudgetBuddy.Account.Repositories;
 using BudgetBuddy.Account.Service;
-using BudgetBuddy.Contracts.Model.Account;
 using NSubstitute;
 
 namespace BudgetBuddy.Tests.Account.Service;

@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\BudgetBuddy.Common\BudgetBuddy.Common.csproj" />
       <ProjectReference Include="..\BudgetBuddy.Contracts\BudgetBuddy.Contracts.csproj" />
       <ProjectReference Include="..\BudgetBuddy.Core\BudgetBuddy.Core.csproj" />
     </ItemGroup>

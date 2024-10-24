@@ -1,4 +1,6 @@
-﻿namespace BudgetBuddy.Contracts.Model.Account;
+﻿using BudgetBuddy.Contracts.Enums;
+
+namespace BudgetBuddy.Contracts.Model.Account;
 
 public class AccountModel
 {
@@ -8,4 +10,5 @@ public class AccountModel
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public int ClientId { get; set; }
+    public AccountType Type { get; set; }
 }

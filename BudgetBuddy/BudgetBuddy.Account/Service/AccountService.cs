@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BudgetBuddy.Account.Model;
-using BudgetBuddy.Account.Repository;
+using BudgetBuddy.Account.Repositories;
 using BudgetBuddy.Contracts.Model.Account;
 
 namespace BudgetBuddy.Account.Service;
