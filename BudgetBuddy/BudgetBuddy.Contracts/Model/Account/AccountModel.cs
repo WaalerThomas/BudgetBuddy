@@ -9,6 +9,5 @@ public class AccountModel
     public required string Description { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
-    public int ClientId { get; set; }
     public AccountType Type { get; set; }
 }

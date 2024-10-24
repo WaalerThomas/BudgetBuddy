@@ -13,13 +13,6 @@ public class AccountValidator : AbstractValidator<AccountModel>, IAccountValidat
         _commonValidators = commonValidators;
         
         RuleFor(x => x.Name).NotEmpty();
-        RuleFor(x => x.ClientId).Must(ClientExist);
         RuleFor(x => x.Type).IsInEnum();
-    }
-    
-    private bool ClientExist(int clientId)
-    {
-        // NOTE: So far no clients exist in the system
-        return !clientId.Equals(0) || _commonValidators.ClientExists(clientId, true);
     }
 }
