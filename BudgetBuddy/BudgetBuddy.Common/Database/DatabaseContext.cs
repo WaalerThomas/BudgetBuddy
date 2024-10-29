@@ -1,10 +1,12 @@
 ﻿using BudgetBuddy.Contracts.Model.Account;
+using BudgetBuddy.Contracts.Model.Client;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Common.Database;
 
 public class DatabaseContext : DbContext
 {
+    public DbSet<ClientModel> Clients { get; set; }
     public DbSet<AccountModel> Accounts { get; set; }
 
     private string DbPath { get; }

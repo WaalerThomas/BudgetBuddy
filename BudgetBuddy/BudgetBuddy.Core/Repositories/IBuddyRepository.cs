@@ -1,9 +1,9 @@
 ﻿using System.Linq.Expressions;
 using BudgetBuddy.Core.Database;
 
-namespace BudgetBuddy.Core.Repository;
+namespace BudgetBuddy.Core.Repositories;
 
-public interface IBuddyRepository<T> where T : BuddyDto
+public interface IBuddyRepository<T> where T : class
 {
     /// <summary>
     /// Creates a new database entry
