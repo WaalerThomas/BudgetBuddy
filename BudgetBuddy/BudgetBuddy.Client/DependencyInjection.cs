@@ -1,0 +1,20 @@
+﻿using BudgetBuddy.Client.AutoMapper;
+using BudgetBuddy.Client.Service;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace BudgetBuddy.Client;
+
+public static class DependencyInjection
+{
+    public static IServiceCollection AddClient(this IServiceCollection services)
+    {
+        // TODO: Add Authentication
+        services.AddAutoMapper(typeof(ClientProfile));
+
+        services.AddScoped<IClientService, ClientService>();
+        services.AddScoped<IClientValidator, ClientValidator>();
+        services.AddScoped<IPasswordService, PasswordService>();
+        
+        return services;
+    }
+}
