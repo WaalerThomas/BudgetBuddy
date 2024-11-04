@@ -34,17 +34,17 @@ public class ClientValidator : AbstractValidator<ClientModel>, IClientValidator
     public void ValidateLogin(ClientModel client)
     {
         var clientModel = _clientService.GetByUsername(client.Username);
-        if (clientModel == null)
+        if (clientModel is null)
         {
             throw new BuddyException("Invalid username or password");
         }
 
-        if (clientModel.Salt == null)
+        if (clientModel.Salt is null)
         {
             throw new BuddyException("No salting exists for the client");
         }
 
-        var isValidPassword = _passwordService.VerifyPassword(client.Password, clientModel.Password, clientModel.Salt);
+        var isValidPassword = _passwordService.Verify(client.Password, clientModel.Password, clientModel.Salt);
         if (!isValidPassword)
         {
             throw new BuddyException("Invalid username or password");

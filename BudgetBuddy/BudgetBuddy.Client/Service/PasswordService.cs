@@ -9,7 +9,7 @@ public class PasswordService : IPasswordService
     private const int Iterations = 350000;
     private static readonly HashAlgorithmName HashAlgorithm = HashAlgorithmName.SHA512;
     
-    public string HashPassword(string password, out byte[] salt)
+    public string Hash(string password, out byte[] salt)
     {
         salt = RandomNumberGenerator.GetBytes(KeySize);
 
@@ -23,7 +23,7 @@ public class PasswordService : IPasswordService
         return Convert.ToHexString(hash);
     }
 
-    public bool VerifyPassword(string password, string hash, byte[] salt)
+    public bool Verify(string password, string hash, byte[] salt)
     {
         var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, HashAlgorithm, KeySize);
 

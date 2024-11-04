@@ -15,8 +15,14 @@ public class ErrorController : ControllerBase
     public BuddyResponse<string?> Error()
     {
         Exception? exception = HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
+
+        if (exception?.InnerException is BuddyException)
+        {
+            exception = exception.InnerException;
+        }
         
         // TODO: Change exception class to also include a status code
+        // TODO: Catch UnauthorizedAccessException
         var (statusCode, message) = exception switch
         {
             BuddyException buddyException => (400, buddyException.Message),

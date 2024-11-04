@@ -6,5 +6,6 @@ public interface IClientService
 {
     ClientModel? Get(Guid id);
     ClientModel? GetByUsername(string username);
-    ClientModel Login(ClientModel client);
+    string Login(ClientModel client);
+    ClientModel Create(ClientModel client);
 }

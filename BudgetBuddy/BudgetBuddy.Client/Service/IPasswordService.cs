@@ -2,6 +2,6 @@
 
 public interface IPasswordService
 {
-    string HashPassword(string password, out byte[] salt);
-    bool VerifyPassword(string password, string hash, byte[] salt);
+    string Hash(string password, out byte[] salt);
+    bool Verify(string password, string hash, byte[] salt);
 }

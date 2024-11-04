@@ -1,16 +1,14 @@
-﻿using BudgetBuddy.Contracts.Model.Client;
-using FluentValidation;
+﻿using BudgetBuddy.Client.Operations;
+using BudgetBuddy.Contracts.Model.Client;
+using BudgetBuddy.Core.Operation;
+using BudgetBuddy.Core.Service;
 
 namespace BudgetBuddy.Client.Service;
 
-public class ClientService : IClientService
+public class ClientService : ServiceBase, IClientService
 {
-
-    private readonly IClientValidator _clientValidator;
-
-    public ClientService(IClientValidator clientValidator)
+    public ClientService(IOperationFactory operationFactory) : base(operationFactory)
     {
-        _clientValidator = clientValidator;
     }
 
     public ClientModel? Get(Guid id)
@@ -20,15 +18,19 @@ public class ClientService : IClientService
 
     public ClientModel? GetByUsername(string username)
     {
-        throw new NotImplementedException();
+        var operation = CreateOperation<GetClientByUsernameOperation>();
+        return operation.Operate(username);
     }
 
-    public ClientModel Login(ClientModel client)
+    public string Login(ClientModel client)
     {
-        _clientValidator.ValidateAndThrow(client);
-        _clientValidator.ValidateLogin(client);
-        
-        // NOTE: Do we need to return the client model?
-        return client;
+        var operation = CreateOperation<LoginClientOperation>();
+        return operation.Operate(client);
+    }
+
+    public ClientModel Create(ClientModel client)
+    {
+        var operation = CreateOperation<CreateClientOperation>();
+        return operation.Operate(client);
     }
 }

@@ -3,6 +3,7 @@ using BudgetBuddy.Account;
 using BudgetBuddy.Client;
 using BudgetBuddy.Common;
 using BudgetBuddy.Contracts.Interface.Common;
+using BudgetBuddy.Core.Operation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -32,7 +33,8 @@ var builder = WebApplication.CreateBuilder(args);
         .AddClient();
 
     builder.Services.AddScoped<ICommonValidators, CommonValidators>();
-    
+    builder.Services.AddScoped<IOperationFactory, OperationFactory>();
+
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(options =>
     {
@@ -80,7 +82,6 @@ var app = builder.Build();
     app.UseAuthorization();
     
     app.UseExceptionHandler("/error");
-    
     app.UseHttpsRedirection();
     
     app.MapControllers();
