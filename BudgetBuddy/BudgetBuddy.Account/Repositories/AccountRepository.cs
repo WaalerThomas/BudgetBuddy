@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BudgetBuddy.Common.Database;
 using BudgetBuddy.Common.Repositories;
+using BudgetBuddy.Common.Service;
 using BudgetBuddy.Contracts.Model.Account;
 
 namespace BudgetBuddy.Account.Repositories;
@@ -9,7 +10,10 @@ public class AccountRepository : Repository<AccountModel>, IAccountRepository
 {
     private readonly IMapper _mapper;
 
-    public AccountRepository(DatabaseContext context, IMapper mapper) : base(context)
+    public AccountRepository(
+        DatabaseContext context,
+        IMapper mapper,
+        ICurrentUserService currentUserService) : base(context, currentUserService)
     {
         _mapper = mapper;
     }
@@ -53,5 +57,12 @@ public class AccountRepository : Repository<AccountModel>, IAccountRepository
     public IEnumerable<AccountModel> GetByIds(IEnumerable<int> ids)
     {
         throw new NotImplementedException();
+    }
+
+    public override IEnumerable<AccountModel> GetAll()
+    {
+        return Context.Accounts
+            .Where(x => x.ClientId == _currentUser.ClientId)
+            .ToList();
     }
 }

@@ -1,12 +1,15 @@
 ﻿using BudgetBuddy.Common.Database;
 using BudgetBuddy.Common.Repositories;
+using BudgetBuddy.Common.Service;
 using BudgetBuddy.Contracts.Model.Client;
 
 namespace BudgetBuddy.Client.Repositories;
 
 public class ClientRepository : Repository<ClientModel>, IClientRepository
 {
-    public ClientRepository(DatabaseContext context) : base(context)
+    public ClientRepository(
+        DatabaseContext context,
+        ICurrentUserService currentUserService) : base(context, currentUserService)
     {
     }
 

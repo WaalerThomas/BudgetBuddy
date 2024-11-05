@@ -1,15 +1,18 @@
 ﻿using System.Linq.Expressions;
 using BudgetBuddy.Common.Database;
+using BudgetBuddy.Common.Service;
 
 namespace BudgetBuddy.Common.Repositories;
 
 public abstract class Repository<TEntity> where TEntity : class
 {
     protected readonly DatabaseContext Context;
+    protected readonly ICurrentUserService _currentUser;
 
-    protected Repository(DatabaseContext context)
+    protected Repository(DatabaseContext context, ICurrentUserService currentUser)
     {
         Context = context;
+        _currentUser = currentUser;
     }
 
     public virtual void Add(TEntity entity)
