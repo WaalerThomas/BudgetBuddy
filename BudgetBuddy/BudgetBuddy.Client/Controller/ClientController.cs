@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace BudgetBuddy.Client.Controller;
 
+// Following this for validation: https://medium.com/@madu.sharadika/authentication-and-authorization-in-net-web-api-with-jwt-b46ef2f54e31
+// TODO: Add a refresh token
+
 [ApiController]
 [Route("api/client")]
 public class ClientController

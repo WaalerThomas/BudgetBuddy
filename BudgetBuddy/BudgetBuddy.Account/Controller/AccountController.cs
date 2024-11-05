@@ -25,9 +25,6 @@ public class AccountController : ControllerBase
         _mapper = mapper;
     }
     
-    /// <summary>
-    /// Retrieves all accounts
-    /// </summary>
     [HttpGet]
     public BuddyResponse<IEnumerable<AccountVm>> Get()
     {

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BudgetBuddy.Account.Repositories;
 using BudgetBuddy.Contracts.Model.Account;
 using FluentValidation;
