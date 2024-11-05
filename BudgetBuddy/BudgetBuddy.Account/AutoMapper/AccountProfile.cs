@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BudgetBuddy.Account.Model;
+using BudgetBuddy.Account.Request;
 using BudgetBuddy.Account.ViewModel;
 using BudgetBuddy.Contracts.Model.Account;
 
@@ -15,5 +16,7 @@ public class AccountProfile : Profile
             .ForMember(x => x.UpdatedAt, p => p.Ignore());
 
         CreateMap<AccountModel, AccountDao>().ReverseMap();
+
+        CreateMap<CreateAccountRequest, AccountModel>();
     }
 }

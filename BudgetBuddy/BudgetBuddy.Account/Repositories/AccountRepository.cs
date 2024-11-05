@@ -22,10 +22,13 @@ public class AccountRepository : Repository<AccountModel>, IAccountRepository
     {
         // TODO: What happens when saving fails??
         
+        model.ClientId = _currentUser.ClientId;
         model.CreatedAt = DateTime.UtcNow;
         
         var result = Context.Accounts.Add(model);
+        
         Context.SaveChanges();
+        
         return result.Entity;
     }
 

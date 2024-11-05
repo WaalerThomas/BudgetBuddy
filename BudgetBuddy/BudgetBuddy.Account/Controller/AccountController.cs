@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using BudgetBuddy.Account.Request;
 using BudgetBuddy.Account.Service;
 using BudgetBuddy.Account.ViewModel;
 using BudgetBuddy.Contracts.Model.Account;
 using BudgetBuddy.Contracts.Model.Common;
 using BudgetBuddy.Core.Exceptions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace BudgetBuddy.Account.Controller;
 
@@ -26,6 +29,8 @@ public class AccountController : ControllerBase
     }
     
     [HttpGet]
+    [EndpointSummary("Get all accounts")]
+    [EndpointDescription("Get all accounts that the user has access to")]
     public BuddyResponse<IEnumerable<AccountVm>> Get()
     {
         var accountModels = _accountService.Get();
@@ -33,9 +38,13 @@ public class AccountController : ControllerBase
         return new BuddyResponse<IEnumerable<AccountVm>>(accounts);
     }
     
+    [NonAction]
     [HttpGet("{id:int}")]
     public BuddyResponse<AccountVm> Get(int id)
     {
+        // TODO: Add authorization check to ensure user has access to account
+        // TODO: Do we require this endpoint?
+        
         var accountModel = _accountService.Get(id);
         if (accountModel == null)
         {
@@ -47,12 +56,13 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost]
-    public BuddyResponse<AccountVm> Create(AccountVm account)
+    [EndpointSummary("Create a new account")]
+    [EndpointDescription("Creates a new account for the user")]
+    public BuddyResponse<AccountVm> Create(CreateAccountRequest createAccountRequest)
     {
-        var accountModel = _mapper.Map<AccountVm, AccountModel>(account);
+        var accountModel = _mapper.Map<CreateAccountRequest, AccountModel>(createAccountRequest);
         accountModel = _accountService.Create(accountModel);
         
-        account = _mapper.Map<AccountModel, AccountVm>(accountModel);
-        return new BuddyResponse<AccountVm>(account);
+        return new BuddyResponse<AccountVm>(_mapper.Map<AccountModel, AccountVm>(accountModel));
     }
 }
