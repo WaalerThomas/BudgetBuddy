@@ -40,7 +40,8 @@ public class CategoryController
     [EndpointDescription("Get all categories grouped by category-group")]
     public BuddyResponse<IEnumerable<GroupCategoryVm>> GetAllGrouped()
     {
-        throw new NotImplementedException();
+        var groupedCategories = _categoryService.GetGrouped();
+        return new BuddyResponse<IEnumerable<GroupCategoryVm>>(groupedCategories);
     }
     
     [HttpGet("groups")]

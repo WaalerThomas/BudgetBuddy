@@ -61,4 +61,11 @@ public class CategoryRepository : Repository<CategoryModel>, ICategoryRepository
             .Where(x => x.ClientId == _currentUser.ClientId && x.IsGroup == isGroup)
             .ToList();
     }
+
+    public IEnumerable<CategoryModel> GetGroupsCategories(int groupId)
+    {
+        return Context.Categories
+            .Where(x => x.ClientId == _currentUser.ClientId && x.GroupId == groupId)
+            .ToList();
+    }
 }

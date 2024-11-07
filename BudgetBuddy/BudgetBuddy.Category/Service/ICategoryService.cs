@@ -1,4 +1,5 @@
-﻿using BudgetBuddy.Contracts.Model.Category;
+﻿using BudgetBuddy.Category.ViewModel;
+using BudgetBuddy.Contracts.Model.Category;
 
 namespace BudgetBuddy.Category.Service;
 
@@ -7,4 +8,6 @@ public interface ICategoryService
     CategoryModel Create(CategoryModel categoryModel);
     IEnumerable<CategoryModel> GetCategories();
     IEnumerable<CategoryModel> GetGroups();
+
+    IEnumerable<GroupCategoryVm> GetGrouped();
 }
