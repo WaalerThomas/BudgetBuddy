@@ -38,7 +38,7 @@ public class CategoryController
     [HttpGet("GetGrouped")]
     [EndpointSummary("Get all categories")]
     [EndpointDescription("Get all categories grouped by category-group")]
-    public BuddyResponse<IEnumerable<GroupedCategoriesVm>> GetAllGrouped()
+    public BuddyResponse<IEnumerable<GroupCategoryVm>> GetAllGrouped()
     {
         throw new NotImplementedException();
     }
