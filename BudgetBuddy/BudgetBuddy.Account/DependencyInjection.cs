@@ -1,7 +1,6 @@
 ﻿using BudgetBuddy.Account.AutoMapper;
 using BudgetBuddy.Account.Operations;
 using BudgetBuddy.Account.Repositories;
-using BudgetBuddy.Account.Request;
 using BudgetBuddy.Account.Service;
 using BudgetBuddy.Common.Database;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +19,8 @@ public static class DependencyInjection
         
         services.AddScoped<DatabaseContext, DatabaseContext>(); // TODO: Will this work?
 
+        services.AddScoped<CreateAccountOperation>();
+        services.AddScoped<GetAllAccountsOperation>();
         services.AddScoped<UpdateAccountOperation>();
         
         return services;
