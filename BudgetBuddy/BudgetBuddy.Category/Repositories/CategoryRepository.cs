@@ -47,7 +47,7 @@ public class CategoryRepository : Repository<CategoryModel>, ICategoryRepository
 
     public CategoryModel? GetById(int id)
     {
-        throw new NotImplementedException();
+        return Context.Categories.FirstOrDefault(x => x.Id == id && x.ClientId == _currentUser.ClientId);
     }
 
     public IEnumerable<CategoryModel> GetByIds(IEnumerable<int> ids)

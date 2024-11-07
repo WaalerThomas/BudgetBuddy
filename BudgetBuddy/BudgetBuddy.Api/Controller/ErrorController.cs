@@ -16,10 +16,12 @@ public class ErrorController : ControllerBase
     {
         Exception? exception = HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
 
-        if (exception?.InnerException is BuddyException)
+        if (exception?.InnerException is not null)
         {
             exception = exception.InnerException;
         }
+        
+        // TODO: Log exception (But be careful not to log sensitive information)
         
         // TODO: Change exception class to also include a status code
         // TODO: Catch UnauthorizedAccessException

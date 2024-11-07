@@ -31,5 +31,8 @@ public class CategoryValidator : AbstractValidator<CategoryModel>, ICategoryVali
         RuleFor(x => x.GroupId)
             .NotNull()
             .When(x => x.IsGroup == false);
+        RuleFor(x => x.GroupId)
+            .Null()
+            .When(x => x.IsGroup);
     }
 }
