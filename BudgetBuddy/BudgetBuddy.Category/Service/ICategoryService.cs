@@ -6,4 +6,5 @@ public interface ICategoryService
 {
     CategoryModel Create(CategoryModel categoryModel);
     IEnumerable<CategoryModel> GetCategories();
+    IEnumerable<CategoryModel> GetGroups();
 }

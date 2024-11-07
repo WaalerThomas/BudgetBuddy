@@ -5,5 +5,5 @@ namespace BudgetBuddy.Category.Repositories;
 
 public interface ICategoryRepository : IBuddyRepository<CategoryModel>
 {
-    IEnumerable<CategoryModel> GetCategories();
+    IEnumerable<CategoryModel> GetByType(bool isGroup);
 }

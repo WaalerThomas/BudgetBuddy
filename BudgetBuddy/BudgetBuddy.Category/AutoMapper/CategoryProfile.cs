@@ -12,5 +12,6 @@ public class CategoryProfile : Profile
         CreateMap<CreateCategoryRequest, CategoryModel>();
 
         CreateMap<CategoryModel, CategoryVm>();
+        CreateMap<CategoryModel, GroupVm>();
     }
 }

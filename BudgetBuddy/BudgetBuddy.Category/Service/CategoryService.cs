@@ -22,4 +22,10 @@ public class CategoryService : ServiceBase, ICategoryService
         var operation = CreateOperation<GetCategoriesOperation>();
         return operation.Operate();
     }
+
+    public IEnumerable<CategoryModel> GetGroups()
+    {
+        var operation = CreateOperation<GetGroupsOperation>();
+        return operation.Operate();
+    }
 }

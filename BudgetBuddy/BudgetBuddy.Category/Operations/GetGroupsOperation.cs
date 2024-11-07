@@ -4,18 +4,18 @@ using BudgetBuddy.Core.Operation;
 
 namespace BudgetBuddy.Category.Operations;
 
-public class GetCategoriesOperation : Operation<object, IEnumerable<CategoryModel>>
+public class GetGroupsOperation : Operation<object, IEnumerable<CategoryModel>>
 {
     private readonly ICategoryRepository _categoryRepository;
 
-    public GetCategoriesOperation(ICategoryRepository categoryRepository)
+    public GetGroupsOperation(ICategoryRepository categoryRepository)
     {
         _categoryRepository = categoryRepository;
     }
 
     protected override IEnumerable<CategoryModel> OnOperate(object request)
     {
-        var categories = _categoryRepository.GetByType(false);
-        return categories;
+        var groups = _categoryRepository.GetByType(true);
+        return groups;
     }
 }
