@@ -2,6 +2,7 @@ using System.Security.Principal;
 using System.Text;
 using BudgetBuddy.Account;
 using BudgetBuddy.Api.Service;
+using BudgetBuddy.Category;
 using BudgetBuddy.Client;
 using BudgetBuddy.Common;
 using BudgetBuddy.Common.Service;
@@ -33,7 +34,8 @@ var builder = WebApplication.CreateBuilder(args);
     
     builder.Services
         .AddAccount()
-        .AddClient();
+        .AddClient()
+        .AddCategory();
 
     builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();

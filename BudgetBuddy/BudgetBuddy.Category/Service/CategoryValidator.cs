@@ -1,0 +1,24 @@
+﻿using BudgetBuddy.Contracts.Interface.Common;
+using BudgetBuddy.Contracts.Model.Category;
+using FluentValidation;
+
+namespace BudgetBuddy.Category.Service;
+
+public class CategoryValidator : AbstractValidator<CategoryModel>, ICategoryValidator
+{
+    private readonly ICommonValidators _commonValidators;
+
+    public CategoryValidator(ICommonValidators commonValidators)
+    {
+        _commonValidators = commonValidators;
+        
+        RuleFor(x => x.Name).NotEmpty();
+
+        RuleFor(x => x.MonthlyAmount)
+            .Null()
+            .When(x => x.IsGroup);
+        RuleFor(x => x.GoalAmount)
+            .Null()
+            .When(x => x.IsGroup);
+    }
+}
