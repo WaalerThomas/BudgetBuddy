@@ -34,4 +34,22 @@ public class CategoryController
         
         return new BuddyResponse<CategoryVm>(_mapper.Map<CategoryModel, CategoryVm>(categoryModel));
     }
+    
+    [HttpGet("GetGrouped")]
+    [EndpointSummary("Get all categories")]
+    [EndpointDescription("Get all categories grouped by category-group")]
+    public BuddyResponse<IEnumerable<GroupedCategoriesVm>> GetAllGrouped()
+    {
+        throw new NotImplementedException();
+    }
+    
+    [HttpGet]
+    [EndpointSummary("Get all categories")]
+    [EndpointDescription("Get all categories that the user has access to, excluding groups")]
+    public BuddyResponse<IEnumerable<CategoryVm>> GetAll()
+    {
+        var categoryModels = _categoryService.GetCategories();
+        var categories = _mapper.Map<IEnumerable<CategoryModel>, IEnumerable<CategoryVm>>(categoryModels);
+        return new BuddyResponse<IEnumerable<CategoryVm>>(categories);
+    }
 }

@@ -5,4 +5,5 @@ namespace BudgetBuddy.Category.Service;
 public interface ICategoryService
 {
     CategoryModel Create(CategoryModel categoryModel);
+    IEnumerable<CategoryModel> GetCategories();
 }

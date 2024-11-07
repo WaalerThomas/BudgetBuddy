@@ -16,4 +16,10 @@ public class CategoryService : ServiceBase, ICategoryService
         var operation = CreateOperation<CreateCategoryOperation>();
         return operation.Operate(categoryModel);
     }
+
+    public IEnumerable<CategoryModel> GetCategories()
+    {
+        var operation = CreateOperation<GetCategoriesOperation>();
+        return operation.Operate();
+    }
 }

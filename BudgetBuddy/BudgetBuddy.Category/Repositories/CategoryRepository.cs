@@ -54,4 +54,11 @@ public class CategoryRepository : Repository<CategoryModel>, ICategoryRepository
     {
         throw new NotImplementedException();
     }
+
+    public IEnumerable<CategoryModel> GetCategories()
+    {
+        return Context.Categories
+            .Where(x => x.ClientId == _currentUser.ClientId && x.IsGroup == false)
+            .ToList();
+    }
 }
