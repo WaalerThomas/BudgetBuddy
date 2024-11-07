@@ -1,4 +1,5 @@
 ﻿using BudgetBuddy.Contracts.Model.Account;
+using BudgetBuddy.Contracts.Model.Category;
 using BudgetBuddy.Contracts.Model.Client;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ public class DatabaseContext : DbContext
 {
     public DbSet<ClientModel> Clients { get; set; }
     public DbSet<AccountModel> Accounts { get; set; }
+    public DbSet<CategoryModel> Categories { get; set; }
 
     private string DbPath { get; }
 

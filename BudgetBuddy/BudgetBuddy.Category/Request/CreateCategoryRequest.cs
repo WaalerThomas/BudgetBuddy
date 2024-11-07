@@ -1,11 +1,7 @@
-﻿using BudgetBuddy.Contracts.Model.Common;
+﻿namespace BudgetBuddy.Category.Request;
 
-namespace BudgetBuddy.Contracts.Model.Category;
-
-public class CategoryModel : TimeKeepModel
+public class CreateCategoryRequest
 {
-    public int Id { get; set; }
-    public Guid ClientId { get; set; }
     public required string Name { get; set; }
     public decimal? MonthlyAmount { get; set; }
     public decimal? GoalAmount { get; set; }
