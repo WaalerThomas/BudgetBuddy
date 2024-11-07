@@ -17,9 +17,16 @@ public class CategoryValidator : AbstractValidator<CategoryModel>, ICategoryVali
         RuleFor(x => x.MonthlyAmount)
             .Null()
             .When(x => x.IsGroup);
+        RuleFor(x => x.MonthlyAmount)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.IsGroup == false);
+        
         RuleFor(x => x.GoalAmount)
             .Null()
             .When(x => x.IsGroup);
+        RuleFor(x => x.GoalAmount)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.IsGroup == false);
         
         RuleFor(x => x.GroupId)
             .NotNull()

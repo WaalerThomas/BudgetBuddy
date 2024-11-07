@@ -1,6 +1,7 @@
 ﻿using BudgetBuddy.Category.Repositories;
 using BudgetBuddy.Category.Service;
 using BudgetBuddy.Contracts.Model.Category;
+using BudgetBuddy.Core.Exceptions;
 using BudgetBuddy.Core.Operation;
 using FluentValidation;
 
@@ -20,6 +21,16 @@ public class CreateCategoryOperation : Operation<CategoryModel, CategoryModel>
     protected override CategoryModel OnOperate(CategoryModel categoryModel)
     {
         _categoryValidator.ValidateAndThrow(categoryModel);
+        
+        // If this is a category, check if the group exists
+        if (categoryModel.GroupId is not null)
+        {
+            var categoryGroup = _categoryRepository.GetById(categoryModel.GroupId.Value);
+            if (categoryGroup is null)
+            {
+                throw new BuddyException("Category group does not exist.");
+            }
+        }
         
         categoryModel = _categoryRepository.Create(categoryModel);
         
