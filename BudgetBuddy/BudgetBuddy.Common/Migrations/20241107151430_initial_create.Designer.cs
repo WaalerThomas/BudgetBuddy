@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BudgetBuddy.Common.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241107125103_added_categories")]
-    partial class added_categories
+    [Migration("20241107151430_initial_create")]
+    partial class initial_create
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
