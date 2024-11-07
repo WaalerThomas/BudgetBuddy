@@ -1,23 +1,23 @@
-using AutoMapper;
+using BudgetBuddy.Account.Operations;
 using BudgetBuddy.Account.Repositories;
 using BudgetBuddy.Contracts.Model.Account;
+using BudgetBuddy.Core.Operation;
+using BudgetBuddy.Core.Service;
 using FluentValidation;
 
 namespace BudgetBuddy.Account.Service;
 
-public class AccountService : IAccountService
+public class AccountService : ServiceBase, IAccountService
 {
-    private readonly IMapper _mapper;
     private readonly IAccountValidator _accountValidator;
     private readonly IAccountRepository _accountRepository;
     
     public AccountService(
+        IOperationFactory operationFactory,
         IAccountRepository accountRepository,
-        IMapper mapper,
-        IAccountValidator accountValidator)
+        IAccountValidator accountValidator) : base(operationFactory)
     {
         _accountRepository = accountRepository;
-        _mapper = mapper;
         _accountValidator = accountValidator;
     }
 
@@ -41,5 +41,11 @@ public class AccountService : IAccountService
         
         var accountModels = _accountRepository.GetAll();
         return accountModels;
+    }
+
+    public AccountModel Update(AccountModel account)
+    {
+        var operation = CreateOperation<UpdateAccountOperation>();
+        return operation.Operate(account);
     }
 }

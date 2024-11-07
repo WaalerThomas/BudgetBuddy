@@ -44,7 +44,7 @@ public class LoginClientOperation : Operation<ClientModel, string>
         var securityToken = new JwtSecurityToken(_configuration["Jwt:Issuer"],
             _configuration["Jwt:Issuer"],
             null,
-            expires: DateTime.Now.AddMinutes(120),
+            expires: DateTime.Now.AddMinutes(30),
             signingCredentials: credentials);
         securityToken.Payload["client_id"] = storedClient!.Id; // TODO: The Id would not be available in the client model
         securityToken.Payload["username"] = storedClient.Username;

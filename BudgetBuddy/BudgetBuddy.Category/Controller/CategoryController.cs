@@ -8,6 +8,7 @@ namespace BudgetBuddy.Category.Controller;
 [Route("api/categories")]
 public class CategoryController
 {
+    [NonAction]
     [HttpPost]
     public BuddyResponse<CategoryVm> Create(CategoryVm category)
     {

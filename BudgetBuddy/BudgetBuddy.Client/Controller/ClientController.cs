@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics.CodeAnalysis;
+using AutoMapper;
 using BudgetBuddy.Client.Request;
 using BudgetBuddy.Client.Service;
 using BudgetBuddy.Client.ViewModel;
@@ -51,6 +52,7 @@ public class ClientController
     [HttpPost("login")]
     [EndpointSummary("Login")]
     [EndpointDescription("Login to the application")]
+    [SuppressMessage("ReSharper.DPA", "DPA0011: High execution time of MVC action", MessageId = "time: 1000ms")]
     public BuddyResponse<string> Login(LoginClientRequest loginClientRequest)
     {
         var loginClient = _mapper.Map<LoginClientRequest, ClientModel>(loginClientRequest);

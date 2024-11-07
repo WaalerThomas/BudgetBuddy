@@ -39,7 +39,16 @@ public class AccountRepository : Repository<AccountModel>, IAccountRepository
 
     public AccountModel Update(AccountModel model)
     {
-        throw new NotImplementedException();
+        // TODO: Implement history table to add the old values to the history table
+        // TODO: Log the changes somewhere?
+        
+        model.UpdatedAt = DateTime.UtcNow;
+        
+        var result = Context.Accounts.Update(model);
+
+        Context.SaveChanges();
+
+        return result.Entity;
     }
 
     public Task<AccountModel> UpdateAsync(AccountModel model)
@@ -52,9 +61,9 @@ public class AccountRepository : Repository<AccountModel>, IAccountRepository
         throw new NotImplementedException();
     }
 
-    public AccountModel GetById(int id)
+    public AccountModel? GetById(int id)
     {
-        throw new NotImplementedException();
+        return Context.Accounts.FirstOrDefault(x => x.ClientId == _currentUser.ClientId && x.Id == id);
     }
 
     public IEnumerable<AccountModel> GetByIds(IEnumerable<int> ids)

@@ -32,7 +32,7 @@ public interface IBuddyRepository<T> where T : class
     /// </summary>
     /// <param name="id">Primary key</param>
     /// <returns>Retrieved entity from database</returns>
-    T GetById(int id);
+    T? GetById(int id);
     IEnumerable<T> GetAll();
     IEnumerable<T> GetByIds(IEnumerable<int> ids);
 }
