@@ -4,11 +4,13 @@ using BudgetBuddy.Category.Service;
 using BudgetBuddy.Category.ViewModel;
 using BudgetBuddy.Contracts.Model.Category;
 using BudgetBuddy.Contracts.Model.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBuddy.Category.Controller;
 
+[Authorize]
 [ApiController]
 [Route("api/categories")]
 public class CategoryController
