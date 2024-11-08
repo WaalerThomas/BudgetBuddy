@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BudgetBuddy.Category.Repositories;
 using BudgetBuddy.Category.ViewModel;
+using BudgetBuddy.Contracts.Enums;
 using BudgetBuddy.Contracts.Model.Category;
 using BudgetBuddy.Core.Operation;
 
@@ -19,7 +20,7 @@ public class GetGroupedCategoriesOperation : Operation<object, IEnumerable<Group
 
     protected override IEnumerable<GroupCategoryVm> OnOperate(object request)
     {
-        var groups = _categoryRepository.GetByType(true);
+        var groups = _categoryRepository.GetByType(CategoryType.Group);
         
         // TODO: What type of edge-cases can there be here?
         
@@ -30,8 +31,8 @@ public class GetGroupedCategoriesOperation : Operation<object, IEnumerable<Group
             
             groupedCategories.Add(new GroupCategoryVm
             {
-                Group = _mapper.Map<CategoryModel, GroupVm>(group),
-                Categories = _mapper.Map<IEnumerable<CategoryModel>, IEnumerable<CategoryVm>>(categories)
+                Group = _mapper.Map<GroupVm>(group),
+                Categories = _mapper.Map<IEnumerable<CategoryVm>>(categories)
             });
         }
 

@@ -14,7 +14,6 @@ public static class DependencyInjection
         services.AddAutoMapper(typeof(ClientProfile));
 
         services.AddScoped<IClientService, ClientService>();
-        services.AddScoped<IClientRepository, ClientRepository>();
         services.AddScoped<IClientValidator, ClientValidator>();
         services.AddScoped<IPasswordService, PasswordService>();
 

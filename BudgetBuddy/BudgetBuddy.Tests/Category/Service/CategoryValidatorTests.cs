@@ -1,6 +1,8 @@
-﻿using BudgetBuddy.Category.Repositories;
+﻿using BudgetBuddy.Category.Model;
+using BudgetBuddy.Category.Repositories;
 using BudgetBuddy.Category.Resources;
 using BudgetBuddy.Category.Service;
+using BudgetBuddy.Contracts.Enums;
 using BudgetBuddy.Core.Exceptions;
 using BudgetBuddy.Tests.Common;
 using NSubstitute;
@@ -192,7 +194,7 @@ public class CategoryValidatorTests
     {
         // arrange
         var categoryModel = TestHelper.CreateCategory();
-        _categoryRepository.GetById(Arg.Any<int>()).Returns(categoryModel);
+        _categoryRepository.GetById(Arg.Any<int>()).Returns(new CategoryDao { Type = CategoryType.Category });
         
         // assert
         var exception = Assert.Throws<BuddyException>(

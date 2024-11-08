@@ -1,15 +1,15 @@
-﻿using BudgetBuddy.Contracts.Model.Account;
-using BudgetBuddy.Contracts.Model.Category;
-using BudgetBuddy.Contracts.Model.Client;
+﻿using BudgetBuddy.Account.Model;
+using BudgetBuddy.Category.Model;
+using BudgetBuddy.Client.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace BudgetBuddy.Common.Database;
+namespace BudgetBuddy.Data;
 
 public class DatabaseContext : DbContext
 {
-    public DbSet<ClientModel> Clients { get; set; }
-    public DbSet<AccountModel> Accounts { get; set; }
-    public DbSet<CategoryModel> Categories { get; set; }
+    public DbSet<ClientDao> Clients { get; set; }
+    public DbSet<AccountDao> Accounts { get; set; }
+    public DbSet<CategoryDao> Categories { get; set; }
 
     private string DbPath { get; }
 

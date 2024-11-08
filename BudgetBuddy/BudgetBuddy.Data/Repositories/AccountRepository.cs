@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
-using BudgetBuddy.Common.Database;
-using BudgetBuddy.Common.Repositories;
+using BudgetBuddy.Account.Model;
+using BudgetBuddy.Account.Repositories;
 using BudgetBuddy.Common.Service;
-using BudgetBuddy.Contracts.Model.Account;
 
-namespace BudgetBuddy.Account.Repositories;
+namespace BudgetBuddy.Data.Repositories;
 
-public class AccountRepository : Repository<AccountModel>, IAccountRepository
+public class AccountRepository : Repository<AccountDao>, IAccountRepository
 {
     private readonly IMapper _mapper;
 
@@ -18,60 +17,60 @@ public class AccountRepository : Repository<AccountModel>, IAccountRepository
         _mapper = mapper;
     }
     
-    public AccountModel Create(AccountModel model)
+    public AccountDao Create(AccountDao account)
     {
         // TODO: What happens when saving fails??
         
-        model.ClientId = _currentUser.ClientId;
-        model.CreatedAt = DateTime.UtcNow;
+        account.ClientId = _currentUser.ClientId;
+        account.CreatedAt = DateTime.UtcNow;
         
-        var result = Context.Accounts.Add(model);
+        var result = Context.Accounts.Add(account);
         
         Context.SaveChanges();
         
         return result.Entity;
     }
 
-    public Task<AccountModel> CreateAsync(AccountModel model)
+    public Task<AccountDao> CreateAsync(AccountDao account)
     {
         throw new NotImplementedException();
     }
 
-    public AccountModel Update(AccountModel model)
+    public AccountDao Update(AccountDao account)
     {
         // TODO: Implement history table to add the old values to the history table
         // TODO: Log the changes somewhere?
         
-        model.UpdatedAt = DateTime.UtcNow;
+        account.UpdatedAt = DateTime.UtcNow;
         
-        var result = Context.Accounts.Update(model);
+        var result = Context.Accounts.Update(account);
 
         Context.SaveChanges();
 
         return result.Entity;
     }
 
-    public Task<AccountModel> UpdateAsync(AccountModel model)
+    public Task<AccountDao> UpdateAsync(AccountDao account)
     {
         throw new NotImplementedException();
     }
 
-    public void Delete(AccountModel model)
+    public void Delete(AccountDao account)
     {
         throw new NotImplementedException();
     }
 
-    public AccountModel? GetById(int id)
+    public AccountDao? GetById(int id)
     {
         return Context.Accounts.FirstOrDefault(x => x.ClientId == _currentUser.ClientId && x.Id == id);
     }
 
-    public IEnumerable<AccountModel> GetByIds(IEnumerable<int> ids)
+    public IEnumerable<AccountDao> GetByIds(IEnumerable<int> ids)
     {
         throw new NotImplementedException();
     }
 
-    public override IEnumerable<AccountModel> GetAll()
+    public override IEnumerable<AccountDao> GetAll()
     {
         return Context.Accounts
             .Where(x => x.ClientId == _currentUser.ClientId)

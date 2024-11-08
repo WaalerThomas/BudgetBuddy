@@ -2,7 +2,6 @@
 using BudgetBuddy.Account.Operations;
 using BudgetBuddy.Account.Repositories;
 using BudgetBuddy.Account.Service;
-using BudgetBuddy.Common.Database;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BudgetBuddy.Account;
@@ -14,11 +13,8 @@ public static class DependencyInjection
         services.AddAutoMapper(typeof(AccountProfile));
         
         services.AddScoped<IAccountService, AccountService>();
-        services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<IAccountValidator, AccountValidator>();
         
-        services.AddScoped<DatabaseContext, DatabaseContext>(); // TODO: Will this work?
-
         services.AddScoped<CreateAccountOperation>();
         services.AddScoped<GetAllAccountsOperation>();
         services.AddScoped<UpdateAccountOperation>();

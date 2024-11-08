@@ -8,6 +8,7 @@ using BudgetBuddy.Common;
 using BudgetBuddy.Common.Service;
 using BudgetBuddy.Contracts.Interface.Common;
 using BudgetBuddy.Core.Operation;
+using BudgetBuddy.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -33,6 +34,7 @@ var builder = WebApplication.CreateBuilder(args);
         });
     
     builder.Services
+        .AddData()
         .AddAccount()
         .AddClient()
         .AddCategory();

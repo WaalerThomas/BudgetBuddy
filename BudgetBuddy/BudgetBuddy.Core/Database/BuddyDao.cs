@@ -1,6 +1,6 @@
 ﻿namespace BudgetBuddy.Core.Database;
 
-public class BuddyDto
+public abstract class BuddyDao
 {
     public int Id { get; set; }
     public DateTime CreatedAt { get; set; }

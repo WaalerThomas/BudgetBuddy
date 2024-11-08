@@ -1,5 +1,6 @@
 ﻿using BudgetBuddy.Category.Repositories;
 using BudgetBuddy.Category.Resources;
+using BudgetBuddy.Contracts.Enums;
 using BudgetBuddy.Contracts.Model.Category;
 using BudgetBuddy.Core.Exceptions;
 using FluentValidation;
@@ -33,15 +34,15 @@ public class CategoryValidator : AbstractValidator<CategoryModel>, ICategoryVali
         RuleFor(x => x.MonthlyAmount)
             .GreaterThanOrEqualTo(0).WithMessage(CategoryResource.NeedPositiveMonthlyAmount)
             .NotNull().WithMessage(CategoryResource.MonthlyAmountRequired)
-            .When(x => x.IsGroup == false);
+            .When(x => x.IsCategory);
 
         RuleFor(x => x.GoalAmount)
             .GreaterThanOrEqualTo(0).WithMessage(CategoryResource.NeedPositiveGoalAmount)
-            .When(x => x.IsGroup == false);
+            .When(x => x.IsCategory);
 
         RuleFor(x => x.GroupId)
             .NotNull().WithMessage(CategoryResource.GroupIdIsMissing)
-            .When(x => x.IsGroup == false);
+            .When(x => x.IsCategory);
     }
 
     public void ValidateGroupAssignment(CategoryModel categoryModel)
@@ -64,7 +65,7 @@ public class CategoryValidator : AbstractValidator<CategoryModel>, ICategoryVali
             throw new BuddyException(CategoryResource.CategoryGroupDoesNotExist);
         }
 
-        if (categoryGroup.IsGroup == false)
+        if (categoryGroup.Type == CategoryType.Category)
         {
             throw new BuddyException(CategoryResource.AssigningCategoryToCategory);
         }

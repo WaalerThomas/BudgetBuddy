@@ -14,7 +14,6 @@ public static class DependencyInjection
 
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<ICategoryValidator, CategoryValidator>();
-        services.AddScoped<ICategoryRepository, CategoryRepository>();
 
         services.AddScoped<CreateCategoryOperation>();
         services.AddScoped<GetCategoryByIdOperation>();

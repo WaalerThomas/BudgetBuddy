@@ -1,4 +1,5 @@
-﻿using BudgetBuddy.Contracts.Model.Category;
+﻿using BudgetBuddy.Contracts.Enums;
+using BudgetBuddy.Contracts.Model.Category;
 
 namespace BudgetBuddy.Tests.Common;
 
@@ -14,7 +15,7 @@ public abstract class TestHelper
             Id = id,
             ClientId = Guid.Parse(clientId),
             Name = name,
-            IsGroup = true
+            Type = CategoryType.Group
         };
     }
     
@@ -33,7 +34,7 @@ public abstract class TestHelper
             Name = name,
             MonthlyAmount = monthlyAmount,
             GoalAmount = goalAmount,
-            IsGroup = false,
+            Type = CategoryType.Category, 
             GroupId = groupId
         };
     }

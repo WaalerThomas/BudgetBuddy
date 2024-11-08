@@ -1,8 +1,8 @@
-﻿using BudgetBuddy.Contracts.Model.Account;
+﻿using BudgetBuddy.Account.Model;
 using BudgetBuddy.Core.Repositories;
 
 namespace BudgetBuddy.Account.Repositories;
 
-public interface IAccountRepository : IBuddyRepository<AccountModel>
+public interface IAccountRepository : IBuddyRepository<AccountDao>
 {
 }

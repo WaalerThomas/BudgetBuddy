@@ -1,9 +1,9 @@
-﻿using BudgetBuddy.Contracts.Model.Client;
+﻿using BudgetBuddy.Client.Model;
 using BudgetBuddy.Core.Repositories;
 
 namespace BudgetBuddy.Client.Repositories;
 
-public interface IClientRepository : IBuddyRepository<ClientModel>
+public interface IClientRepository : IBuddyRepository<ClientDao>
 {
-    ClientModel? GetByUsername(string username);
+    ClientDao? GetByUsername(string username);
 }

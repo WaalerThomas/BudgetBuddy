@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BudgetBuddy.Common.Migrations
+namespace BudgetBuddy.Data.Migrations
 {
     /// <inheritdoc />
     public partial class initial_create : Migration
@@ -19,10 +19,10 @@ namespace BudgetBuddy.Common.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ClientId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
                     Type = table.Column<int>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,10 +39,10 @@ namespace BudgetBuddy.Common.Migrations
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     MonthlyAmount = table.Column<decimal>(type: "TEXT", nullable: true),
                     GoalAmount = table.Column<decimal>(type: "TEXT", nullable: true),
-                    IsGroup = table.Column<bool>(type: "INTEGER", nullable: false),
                     GroupId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,7 +58,7 @@ namespace BudgetBuddy.Common.Migrations
                     Password = table.Column<string>(type: "TEXT", nullable: false),
                     Salt = table.Column<byte[]>(type: "BLOB", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

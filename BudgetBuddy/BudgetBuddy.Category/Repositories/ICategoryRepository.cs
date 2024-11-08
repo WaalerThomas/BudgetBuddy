@@ -1,10 +1,11 @@
-﻿using BudgetBuddy.Contracts.Model.Category;
+﻿using BudgetBuddy.Category.Model;
+using BudgetBuddy.Contracts.Enums;
 using BudgetBuddy.Core.Repositories;
 
 namespace BudgetBuddy.Category.Repositories;
 
-public interface ICategoryRepository : IBuddyRepository<CategoryModel>
+public interface ICategoryRepository : IBuddyRepository<CategoryDao>
 {
-    IEnumerable<CategoryModel> GetByType(bool isGroup);
-    IEnumerable<CategoryModel> GetGroupsCategories(int groupId);
+    IEnumerable<CategoryDao> GetByType(CategoryType type);
+    IEnumerable<CategoryDao> GetGroupsCategories(int groupId);
 }

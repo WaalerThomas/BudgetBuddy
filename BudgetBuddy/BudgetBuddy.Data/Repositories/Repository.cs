@@ -1,8 +1,7 @@
 ﻿using System.Linq.Expressions;
-using BudgetBuddy.Common.Database;
 using BudgetBuddy.Common.Service;
 
-namespace BudgetBuddy.Common.Repositories;
+namespace BudgetBuddy.Data.Repositories;
 
 public abstract class Repository<TEntity> where TEntity : class
 {

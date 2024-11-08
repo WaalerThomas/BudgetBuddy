@@ -1,4 +1,6 @@
-﻿using BudgetBuddy.Category.Operations;
+﻿using AutoMapper;
+using BudgetBuddy.Category.Model;
+using BudgetBuddy.Category.Operations;
 using BudgetBuddy.Category.Repositories;
 using BudgetBuddy.Category.Service;
 using BudgetBuddy.Contracts.Model.Category;
@@ -14,14 +16,16 @@ public class CreateCategoryOperationTests
 
     private ICategoryValidator _categoryValidator;
     private ICategoryRepository _categoryRepository;
+    private IMapper _mapper;
     
     [SetUp]
     public void Setup()
     {
         _categoryValidator = Substitute.For<ICategoryValidator>();
         _categoryRepository = Substitute.For<ICategoryRepository>();
+        _mapper = Substitute.For<IMapper>();
         
-        _operation = new CreateCategoryOperation(_categoryValidator, _categoryRepository);
+        _operation = new CreateCategoryOperation(_categoryValidator, _categoryRepository, _mapper);
     }
 
     [Test]
@@ -41,6 +45,6 @@ public class CreateCategoryOperationTests
         _operation.Operate(TestHelper.CreateCategory());
         
         // assert
-        _categoryRepository.Received().Create(Arg.Any<CategoryModel>());
+        _categoryRepository.Received().Create(Arg.Any<CategoryDao>());
     }
 }

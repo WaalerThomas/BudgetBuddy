@@ -17,6 +17,7 @@
       <ProjectReference Include="..\BudgetBuddy.Account\BudgetBuddy.Account.csproj" />
       <ProjectReference Include="..\BudgetBuddy.Category\BudgetBuddy.Category.csproj" />
       <ProjectReference Include="..\BudgetBuddy.Client\BudgetBuddy.Client.csproj" />
+      <ProjectReference Include="..\BudgetBuddy.Data\BudgetBuddy.Data.csproj" />
     </ItemGroup>
 
 </Project>

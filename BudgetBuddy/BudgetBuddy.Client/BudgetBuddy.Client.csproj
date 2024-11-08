@@ -21,8 +21,4 @@
       <ProjectReference Include="..\BudgetBuddy.Core\BudgetBuddy.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Model\" />
-    </ItemGroup>
-
 </Project>
