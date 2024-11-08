@@ -11,7 +11,13 @@ public class CategoryService : ServiceBase, ICategoryService
     public CategoryService(IOperationFactory operationFactory) : base(operationFactory)
     {
     }
-    
+
+    public CategoryModel? Get(int id)
+    {
+        var operation = CreateOperation<GetCategoryByIdOperation>();
+        return operation.Operate(id);
+    }
+
     public CategoryModel Create(CategoryModel categoryModel)
     {
         var operation = CreateOperation<CreateCategoryOperation>();
@@ -28,6 +34,12 @@ public class CategoryService : ServiceBase, ICategoryService
     {
         var operation = CreateOperation<GetGroupsOperation>();
         return operation.Operate();
+    }
+
+    public CategoryModel Update(CategoryModel categoryModel)
+    {
+        var operation = CreateOperation<UpdateCategoryOperation>();
+        return operation.Operate(categoryModel);
     }
 
     public IEnumerable<GroupCategoryVm> GetGrouped()

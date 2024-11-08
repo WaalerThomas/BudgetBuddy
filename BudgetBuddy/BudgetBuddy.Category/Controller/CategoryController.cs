@@ -4,6 +4,7 @@ using BudgetBuddy.Category.Service;
 using BudgetBuddy.Category.ViewModel;
 using BudgetBuddy.Contracts.Model.Category;
 using BudgetBuddy.Contracts.Model.Common;
+using BudgetBuddy.Core.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,7 @@ public class CategoryController
     public BuddyResponse<IEnumerable<GroupCategoryVm>> GetAllGrouped()
     {
         var groupedCategories = _categoryService.GetGrouped();
+        
         return new BuddyResponse<IEnumerable<GroupCategoryVm>>(groupedCategories);
     }
     
@@ -51,6 +53,7 @@ public class CategoryController
     {
         var categoryModels = _categoryService.GetGroups();
         var groups = _mapper.Map<IEnumerable<CategoryModel>, IEnumerable<GroupVm>>(categoryModels);
+        
         return new BuddyResponse<IEnumerable<GroupVm>>(groups);
     }
     
@@ -61,6 +64,28 @@ public class CategoryController
     {
         var categoryModels = _categoryService.GetCategories();
         var categories = _mapper.Map<IEnumerable<CategoryModel>, IEnumerable<CategoryVm>>(categoryModels);
+        
         return new BuddyResponse<IEnumerable<CategoryVm>>(categories);
+    }
+    
+    [HttpPatch]
+    [EndpointSummary("Update a category")]
+    [EndpointDescription("Update a category for the user")]
+    public BuddyResponse<CategoryVm> Update([FromBody] UpdateCategoryRequest updateCategoryRequest)
+    {
+        var categoryModel = _categoryService.Get(updateCategoryRequest.Id);
+        if (categoryModel is null)
+        {
+            throw new BuddyException("Category not found");
+        }
+        
+        categoryModel.Name = updateCategoryRequest.Name;
+        categoryModel.MonthlyAmount = updateCategoryRequest.MonthlyAmount;
+        categoryModel.GoalAmount = updateCategoryRequest.GoalAmount;
+        categoryModel.GroupId = updateCategoryRequest.GroupId;
+        
+        categoryModel = _categoryService.Update(categoryModel);
+        
+        return new BuddyResponse<CategoryVm>(_mapper.Map<CategoryModel, CategoryVm>(categoryModel));
     }
 }

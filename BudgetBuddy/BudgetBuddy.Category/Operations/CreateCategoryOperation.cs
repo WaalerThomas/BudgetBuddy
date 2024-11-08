@@ -22,6 +22,8 @@ public class CreateCategoryOperation : Operation<CategoryModel, CategoryModel>
     {
         _categoryValidator.ValidateAndThrow(categoryModel);
         
+        // TODO: Check if you can set another category as a GroupId, shouldn't be possible
+        
         // If this is a category, check if the group exists
         if (categoryModel.GroupId is not null)
         {

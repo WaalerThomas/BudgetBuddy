@@ -32,7 +32,13 @@ public class CategoryRepository : Repository<CategoryModel>, ICategoryRepository
 
     public CategoryModel Update(CategoryModel model)
     {
-        throw new NotImplementedException();
+        model.UpdatedAt = DateTime.UtcNow;
+        
+        var result = Context.Categories.Update(model);
+        
+        Context.SaveChanges();
+        
+        return result.Entity;
     }
 
     public Task<CategoryModel> UpdateAsync(CategoryModel model)
