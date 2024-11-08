@@ -5,4 +5,5 @@ namespace BudgetBuddy.Category.Service;
 
 public interface ICategoryValidator : IValidator<CategoryModel>
 {
+    public void ValidateGroupAssignment(CategoryModel categoryModel);
 }

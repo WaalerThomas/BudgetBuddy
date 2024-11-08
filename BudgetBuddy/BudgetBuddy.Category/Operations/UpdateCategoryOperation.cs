@@ -20,6 +20,7 @@ public class UpdateCategoryOperation : Operation<CategoryModel, CategoryModel>
     protected override CategoryModel OnOperate(CategoryModel categoryModel)
     {
         _categoryValidator.ValidateAndThrow(categoryModel);
+        _categoryValidator.ValidateGroupAssignment(categoryModel);
 
         categoryModel = _categoryRepository.Update(categoryModel);
         return categoryModel;

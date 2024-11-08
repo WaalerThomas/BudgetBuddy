@@ -1,5 +1,7 @@
-﻿using BudgetBuddy.Contracts.Interface.Common;
+﻿using BudgetBuddy.Category.Repositories;
+using BudgetBuddy.Contracts.Interface.Common;
 using BudgetBuddy.Contracts.Model.Category;
+using BudgetBuddy.Core.Exceptions;
 using FluentValidation;
 
 namespace BudgetBuddy.Category.Service;
@@ -7,11 +9,13 @@ namespace BudgetBuddy.Category.Service;
 public class CategoryValidator : AbstractValidator<CategoryModel>, ICategoryValidator
 {
     private readonly ICommonValidators _commonValidators;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public CategoryValidator(ICommonValidators commonValidators)
+    public CategoryValidator(ICommonValidators commonValidators, ICategoryRepository categoryRepository)
     {
         _commonValidators = commonValidators;
-        
+        _categoryRepository = categoryRepository;
+
         RuleFor(x => x.Name).NotEmpty();
 
         // ### Validation Rules for Groups ###
@@ -47,5 +51,31 @@ public class CategoryValidator : AbstractValidator<CategoryModel>, ICategoryVali
             .NotNull()
             .When(x => x.IsGroup == false)
             .WithMessage("Categories must belong to a group");
+    }
+
+    public void ValidateGroupAssignment(CategoryModel categoryModel)
+    {
+        if (categoryModel.IsGroup)
+        {
+            return;
+        }
+        
+        // This is also checked in the FluentValidation rules
+        if (categoryModel.GroupId is null)
+        {
+            throw new BuddyException("Categories must belong to a group");
+        }
+        
+        var categoryGroup = _categoryRepository.GetById(categoryModel.GroupId.Value);
+        
+        if (categoryGroup is null)
+        {
+            throw new BuddyException("Category group does not exist.");
+        }
+
+        if (categoryGroup.IsGroup == false)
+        {
+            throw new BuddyException("Cannot assign a category to another category");
+        }
     }
 }
