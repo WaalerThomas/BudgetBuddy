@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BudgetBuddy.Client.Model;
 using BudgetBuddy.Client.Request;
 using BudgetBuddy.Client.ViewModel;
 using BudgetBuddy.Contracts.Model.Client;
@@ -9,6 +10,9 @@ public class ClientProfile : Profile
 {
     public ClientProfile()
     {
+        CreateMap<ClientModel, ClientDao>()
+            .ReverseMap();
+        
         CreateMap<ClientModel, ClientVm>()
             .ReverseMap();
         

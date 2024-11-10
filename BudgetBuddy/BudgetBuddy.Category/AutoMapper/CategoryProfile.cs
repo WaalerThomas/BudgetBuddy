@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BudgetBuddy.Category.Model;
 using BudgetBuddy.Category.Request;
 using BudgetBuddy.Category.ViewModel;
 using BudgetBuddy.Contracts.Model.Category;
@@ -13,5 +14,8 @@ public class CategoryProfile : Profile
 
         CreateMap<CategoryModel, CategoryVm>();
         CreateMap<CategoryModel, GroupVm>();
+        
+        CreateMap<CategoryModel, CategoryDao>()
+            .ReverseMap();
     }
 }

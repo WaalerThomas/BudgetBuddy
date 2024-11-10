@@ -15,7 +15,8 @@ public class AccountProfile : Profile
             .ForMember(x => x.CreatedAt, p => p.Ignore())
             .ForMember(x => x.UpdatedAt, p => p.Ignore());
 
-        CreateMap<AccountModel, AccountDao>().ReverseMap();
+        CreateMap<AccountModel, AccountDao>()
+            .ReverseMap();
 
         CreateMap<CreateAccountRequest, AccountModel>();
     }

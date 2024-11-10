@@ -1,4 +1,6 @@
-﻿namespace BudgetBuddy.Category.ViewModel;
+﻿using BudgetBuddy.Contracts.Enums;
+
+namespace BudgetBuddy.Category.ViewModel;
 
 public class CategoryVm
 {
@@ -7,6 +9,6 @@ public class CategoryVm
     public string Name { get; set; } = string.Empty;
     public decimal? MonthlyAmount { get; set; }
     public decimal? GoalAmount { get; set; }
-    public bool IsGroup { get; set; }
+    public CategoryType Type { get; set; }
     public int? GroupId { get; set; }
 }

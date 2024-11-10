@@ -4,10 +4,12 @@ using BudgetBuddy.Contracts.Model.Transaction;
 using BudgetBuddy.Transaction.Request;
 using BudgetBuddy.Transaction.Service;
 using BudgetBuddy.Transaction.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBuddy.Transaction.Controller;
 
+[Authorize]
 [ApiController]
 [Route("api/transactions")]
 public class TransactionController
