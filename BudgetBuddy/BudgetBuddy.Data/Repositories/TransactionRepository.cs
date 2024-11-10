@@ -14,7 +14,14 @@ public class TransactionRepository : Repository<TransactionDao>, ITransactionRep
 
     public TransactionDao Create(TransactionDao model)
     {
-        throw new NotImplementedException();
+        model.ClientId = _currentUser.ClientId;
+        model.CreatedAt = DateTime.Now;
+        
+        var result = Context.Transactions.Add(model);
+        
+        Context.SaveChanges();
+        
+        return result.Entity;
     }
 
     public Task<TransactionDao> CreateAsync(TransactionDao model)
