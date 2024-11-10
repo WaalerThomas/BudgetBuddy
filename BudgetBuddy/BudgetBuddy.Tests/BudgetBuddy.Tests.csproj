@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Account\Operation\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BudgetBuddy.Account\BudgetBuddy.Account.csproj" />
     <ProjectReference Include="..\BudgetBuddy.Category\BudgetBuddy.Category.csproj" />
   </ItemGroup>

@@ -10,26 +10,26 @@ using NSubstitute;
 namespace BudgetBuddy.Tests.Category.Operation;
 
 [TestFixture]
-public class CreateCategoryOperationTests
+public class UpdateCategoryOperationTests
 {
-    private CreateCategoryOperation _operation;
-
+    private UpdateCategoryOperation _operation;
+    
+    private IMapper _mapper;
     private ICategoryValidator _categoryValidator;
     private ICategoryRepository _categoryRepository;
-    private IMapper _mapper;
     
     [SetUp]
-    public void Setup()
+    public void SetUp()
     {
+        _mapper = Substitute.For<IMapper>();
         _categoryValidator = Substitute.For<ICategoryValidator>();
         _categoryRepository = Substitute.For<ICategoryRepository>();
-        _mapper = Substitute.For<IMapper>();
         
-        _operation = new CreateCategoryOperation(_categoryValidator, _categoryRepository, _mapper);
+        _operation = new UpdateCategoryOperation(_categoryRepository, _categoryValidator, _mapper);
     }
 
     [Test]
-    public void CreateCategory_ShouldValidateModel()
+    public void UpdateCategory_ShouldValidateGroupAssignment()
     {
         // act
         _operation.Operate(TestHelper.CreateCategory());
@@ -39,22 +39,22 @@ public class CreateCategoryOperationTests
     }
     
     [Test]
-    public void CreateCategory_ShouldCallCreateOnRepository()
+    public void UpdateCategory_ShouldCallUpdateOnRepository()
     {
         // act
         _operation.Operate(TestHelper.CreateCategory());
         
         // assert
-        _categoryRepository.Received().Create(Arg.Any<CategoryDao>());
+        _categoryRepository.Received().Update(Arg.Any<CategoryDao>());
     }
     
     [Test]
-    public void CreateCategory_WithValidCategory_ShouldReturnCategoryModel()
+    public void UpdateCategory_WithValidCategory_ShouldReturnCategoryModel()
     {
         // arrange
         var categoryModel = TestHelper.CreateCategory();
         var categoryDao = _mapper.Map<CategoryDao>(categoryModel);
-        _categoryRepository.Create(Arg.Any<CategoryDao>()).Returns(categoryDao);
+        _categoryRepository.Update(Arg.Any<CategoryDao>()).Returns(categoryDao);
         _mapper.Map<CategoryModel>(Arg.Any<CategoryDao>()).Returns(categoryModel);
         
         // act

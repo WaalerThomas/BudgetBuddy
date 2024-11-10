@@ -13,7 +13,6 @@ namespace BudgetBuddy.Tests.Category.Service;
 public class CategoryValidatorTests
 {
     private CategoryValidator _categoryValidator;
-    
     private ICategoryRepository _categoryRepository;
 
     [SetUp]

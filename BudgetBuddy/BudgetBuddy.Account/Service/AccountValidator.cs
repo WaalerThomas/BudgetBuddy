@@ -1,4 +1,5 @@
-﻿using BudgetBuddy.Contracts.Interface.Common;
+﻿using BudgetBuddy.Account.Resources;
+using BudgetBuddy.Contracts.Interface.Common;
 using BudgetBuddy.Contracts.Model.Account;
 using FluentValidation;
 
@@ -12,7 +13,7 @@ public class AccountValidator : AbstractValidator<AccountModel>, IAccountValidat
     {
         _commonValidators = commonValidators;
         
-        RuleFor(x => x.Name).NotEmpty();
-        RuleFor(x => x.Type).IsInEnum();
+        RuleFor(x => x.Name).NotEmpty().WithMessage(AccountResource.NameRequired);
+        RuleFor(x => x.Type).IsInEnum().WithMessage(AccountResource.AccountTypeRequired);
     }
 }
