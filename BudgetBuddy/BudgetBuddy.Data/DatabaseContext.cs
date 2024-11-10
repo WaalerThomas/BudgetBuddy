@@ -1,6 +1,7 @@
 ﻿using BudgetBuddy.Account.Model;
 using BudgetBuddy.Category.Model;
 using BudgetBuddy.Client.Model;
+using BudgetBuddy.Transaction.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Data;
@@ -10,6 +11,7 @@ public class DatabaseContext : DbContext
     public DbSet<ClientDao> Clients { get; set; }
     public DbSet<AccountDao> Accounts { get; set; }
     public DbSet<CategoryDao> Categories { get; set; }
+    public DbSet<TransactionDao> Transactions { get; set; }
 
     private string DbPath { get; }
 

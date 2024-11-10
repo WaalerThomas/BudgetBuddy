@@ -1,4 +1,3 @@
-using System.Security.Principal;
 using System.Text;
 using BudgetBuddy.Account;
 using BudgetBuddy.Api.Service;
@@ -9,6 +8,7 @@ using BudgetBuddy.Common.Service;
 using BudgetBuddy.Contracts.Interface.Common;
 using BudgetBuddy.Core.Operation;
 using BudgetBuddy.Data;
+using BudgetBuddy.Transaction;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -37,6 +37,7 @@ var builder = WebApplication.CreateBuilder(args);
         .AddData()
         .AddAccount()
         .AddClient()
+        .AddTransaction()
         .AddCategory();
 
     builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
