@@ -59,11 +59,9 @@ public class AccountController : ControllerBase
             throw new BuddyException("Account not found");
         }
         
-        accountModel.Name = updateAccountRequest.Name;
-        accountModel.Description = updateAccountRequest.Description;
+        _mapper.Map(updateAccountRequest, accountModel);
         
         accountModel = _accountService.Update(accountModel);
-        
         return new BuddyResponse<AccountVm>(_mapper.Map<AccountModel, AccountVm>(accountModel));
     }
 }

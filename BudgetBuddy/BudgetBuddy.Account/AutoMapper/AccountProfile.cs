@@ -19,5 +19,6 @@ public class AccountProfile : Profile
             .ReverseMap();
 
         CreateMap<CreateAccountRequest, AccountModel>();
+        CreateMap<UpdateAccountRequest, AccountModel>();
     }
 }

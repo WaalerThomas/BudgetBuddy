@@ -78,13 +78,9 @@ public class CategoryController
             throw new BuddyException("Category not found");
         }
         
-        categoryModel.Name = updateCategoryRequest.Name;
-        categoryModel.MonthlyAmount = updateCategoryRequest.MonthlyAmount;
-        categoryModel.GoalAmount = updateCategoryRequest.GoalAmount;
-        categoryModel.GroupId = updateCategoryRequest.GroupId;
+        _mapper.Map(updateCategoryRequest, categoryModel);
         
         categoryModel = _categoryService.Update(categoryModel);
-        
         return new BuddyResponse<CategoryVm>(_mapper.Map<CategoryModel, CategoryVm>(categoryModel));
     }
 }
