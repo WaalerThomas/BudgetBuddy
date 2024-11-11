@@ -1,4 +1,5 @@
-﻿using BudgetBuddy.Contracts.Model.Transaction;
+﻿using BudgetBuddy.Contracts.Model.Account;
+using BudgetBuddy.Contracts.Model.Transaction;
 
 namespace BudgetBuddy.Contracts.Interface.Transaction;
 
@@ -8,4 +9,6 @@ public interface ITransactionService
     IEnumerable<TransactionModel> Get();
     TransactionModel? GetById(int id);
     TransactionModel Update(TransactionModel transactionModel);
+    
+    AccountBalanceModel GetBalance(int id, bool onlyActualBalance = false);
 }

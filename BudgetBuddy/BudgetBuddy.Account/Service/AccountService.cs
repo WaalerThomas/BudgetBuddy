@@ -4,6 +4,7 @@ using BudgetBuddy.Account.Repositories;
 using BudgetBuddy.Contracts.Interface.Account;
 using BudgetBuddy.Contracts.Model.Account;
 using BudgetBuddy.Core.Operation;
+using BudgetBuddy.Core.Request.Common;
 using BudgetBuddy.Core.Service;
 
 namespace BudgetBuddy.Account.Service;
@@ -46,9 +47,11 @@ public class AccountService : ServiceBase, IAccountService
         return operation.Operate(account);
     }
 
-    public AccountBalanceModel GetBalance(int id)
+    public AccountBalanceModel GetBalance(int id, bool onlyActualBalance = false)
     {
+        // TODO: Go through the whole process and clean it up
+        
         var operation = CreateOperation<GetAccountBalanceOperation>();
-        return operation.Operate(id);
+        return operation.Operate(new GetBalanceRequest { Id = id, OnlyActualBalance = onlyActualBalance });
     }
 }

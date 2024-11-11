@@ -55,6 +55,11 @@ public class TransactionValidator : AbstractValidator<TransactionModel>, ITransa
             throw new BuddyException(string.Format(
                 TransactionResource.FieldIsRequiredForType, "From Account Id", typeErrorMessage));
         }
+
+        if (transactionModel.Amount >= 0)
+        {
+            throw new BuddyException("Category transactions must have a negative amount");
+        }
     }
     
     private void ValidateAccountTransferTransaction(TransactionModel transactionModel)
@@ -78,6 +83,11 @@ public class TransactionValidator : AbstractValidator<TransactionModel>, ITransa
             throw new BuddyException(string.Format(
                 TransactionResource.FieldIsRequiredForType, "To Account Id", typeErrorMessage));
         }
+        
+        if (transactionModel.Amount <= 0)
+        {
+            throw new BuddyException("Account transfer transactions must have a positive amount");
+        }
     }
     
     private void ValidateBalanceAdjustmentTransaction(TransactionModel transactionModel)
@@ -100,6 +110,11 @@ public class TransactionValidator : AbstractValidator<TransactionModel>, ITransa
         {
             throw new BuddyException(string.Format(
                 TransactionResource.FieldIsRequiredForType, "To Account Id", typeErrorMessage));
+        }
+
+        if (transactionModel.Amount == 0)
+        {
+            throw new BuddyException("Balance adjustment transactions must have a non-zero amount");
         }
     }
 }

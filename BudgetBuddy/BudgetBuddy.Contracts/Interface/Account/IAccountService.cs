@@ -9,5 +9,5 @@ public interface IAccountService
     IEnumerable<AccountModel> Get();
     AccountModel Update(AccountModel account);
 
-    AccountBalanceModel GetBalance(int id);
+    AccountBalanceModel GetBalance(int id, bool onlyActualBalance = false);
 }

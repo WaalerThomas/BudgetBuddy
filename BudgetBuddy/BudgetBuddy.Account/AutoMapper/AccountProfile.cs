@@ -20,5 +20,7 @@ public class AccountProfile : Profile
 
         CreateMap<CreateAccountRequest, AccountModel>();
         CreateMap<UpdateAccountRequest, AccountModel>();
+
+        CreateMap<AccountBalanceModel, AccountBalanceVm>();
     }
 }

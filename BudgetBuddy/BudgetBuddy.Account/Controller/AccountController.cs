@@ -67,7 +67,17 @@ public class AccountController : ControllerBase
     
     [HttpGet("balance/{id:int}")]
     [EndpointSummary("Get account balance")]
+    [EndpointDescription("Get the actual balance for the account")]
     public BuddyResponse<AccountBalanceVm> GetBalance(int id)
+    {
+        var balance = _accountService.GetBalance(id, true);
+        return new BuddyResponse<AccountBalanceVm>(_mapper.Map<AccountBalanceVm>(balance));
+    }
+    
+    [HttpGet("balanceFull/{id:int}")]
+    [EndpointSummary("Get account settled- and pending- balance")]
+    [EndpointDescription("Get the settled and pending balance for the account")]
+    public BuddyResponse<AccountBalanceVm> GetBalanceFull(int id)
     {
         var balance = _accountService.GetBalance(id);
         return new BuddyResponse<AccountBalanceVm>(_mapper.Map<AccountBalanceVm>(balance));

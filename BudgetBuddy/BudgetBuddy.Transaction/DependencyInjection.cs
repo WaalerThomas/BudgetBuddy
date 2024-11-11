@@ -26,5 +26,6 @@ public static class DependencyInjection
         services.AddScoped<GetTransactionsOperation>();
         services.AddScoped<GetTransactionByIdOperation>();
         services.AddScoped<UpdateTransactionOperation>();
+        services.AddScoped<GetBalanceOperation>();
     }
 }

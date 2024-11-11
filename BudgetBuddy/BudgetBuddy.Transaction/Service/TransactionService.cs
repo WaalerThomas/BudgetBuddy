@@ -1,8 +1,11 @@
 ﻿using BudgetBuddy.Contracts.Interface.Transaction;
+using BudgetBuddy.Contracts.Model.Account;
 using BudgetBuddy.Contracts.Model.Transaction;
 using BudgetBuddy.Core.Operation;
+using BudgetBuddy.Core.Request.Common;
 using BudgetBuddy.Core.Service;
 using BudgetBuddy.Transaction.Operations;
+using BudgetBuddy.Transaction.Request;
 
 namespace BudgetBuddy.Transaction.Service;
 
@@ -34,5 +37,11 @@ public class TransactionService : ServiceBase, ITransactionService
     {
         var operation = CreateOperation<UpdateTransactionOperation>();
         return operation.Operate(transactionModel);
+    }
+
+    public AccountBalanceModel GetBalance(int id, bool onlyActualBalance = false)
+    {
+        var operation = CreateOperation<GetBalanceOperation>();
+        return operation.Operate(new GetBalanceRequest { Id = id, OnlyActualBalance = onlyActualBalance });;
     }
 }
