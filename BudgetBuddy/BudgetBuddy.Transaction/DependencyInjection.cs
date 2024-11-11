@@ -14,8 +14,16 @@ public static class DependencyInjection
         services.AddScoped<ITransactionValidator, TransactionValidator>();
         services.AddScoped<ITransactionService, TransactionService>();
 
-        services.AddScoped<CreateTransactionOperation>();
+        services.AddOperations();
         
         return services;
+    }
+    
+    private static void AddOperations(this IServiceCollection services)
+    {
+        services.AddScoped<CreateTransactionOperation>();
+        services.AddScoped<GetTransactionsOperation>();
+        services.AddScoped<GetTransactionByIdOperation>();
+        services.AddScoped<UpdateTransactionOperation>();
     }
 }

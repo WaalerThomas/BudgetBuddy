@@ -2,6 +2,7 @@
 using BudgetBuddy.Account.Model;
 using BudgetBuddy.Account.Repositories;
 using BudgetBuddy.Common.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Data.Repositories;
 
@@ -62,7 +63,9 @@ public class AccountRepository : Repository<AccountDao>, IAccountRepository
 
     public AccountDao? GetById(int id)
     {
-        return Context.Accounts.FirstOrDefault(x => x.ClientId == _currentUser.ClientId && x.Id == id);
+        return Context.Accounts
+            .AsNoTracking()
+            .FirstOrDefault(x => x.ClientId == _currentUser.ClientId && x.Id == id);
     }
 
     public IEnumerable<AccountDao> GetByIds(IEnumerable<int> ids)
@@ -73,6 +76,7 @@ public class AccountRepository : Repository<AccountDao>, IAccountRepository
     public override IEnumerable<AccountDao> GetAll()
     {
         return Context.Accounts
+            .AsNoTracking()
             .Where(x => x.ClientId == _currentUser.ClientId)
             .ToList();
     }

@@ -2,6 +2,7 @@
 using BudgetBuddy.Category.Repositories;
 using BudgetBuddy.Common.Service;
 using BudgetBuddy.Contracts.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Data.Repositories;
 
@@ -53,7 +54,9 @@ public class CategoryRepository : Repository<CategoryDao>, ICategoryRepository
 
     public CategoryDao? GetById(int id)
     {
-        return Context.Categories.FirstOrDefault(x => x.Id == id && x.ClientId == _currentUser.ClientId);
+        return Context.Categories
+            .AsNoTracking()
+            .FirstOrDefault(x => x.Id == id && x.ClientId == _currentUser.ClientId);
     }
 
     public IEnumerable<CategoryDao> GetByIds(IEnumerable<int> ids)
@@ -64,6 +67,7 @@ public class CategoryRepository : Repository<CategoryDao>, ICategoryRepository
     public IEnumerable<CategoryDao> GetByType(CategoryType type)
     {
         return Context.Categories
+            .AsNoTracking()
             .Where(x => x.ClientId == _currentUser.ClientId && x.Type == type)
             .ToList();
     }
@@ -71,6 +75,7 @@ public class CategoryRepository : Repository<CategoryDao>, ICategoryRepository
     public IEnumerable<CategoryDao> GetGroupsCategories(int groupId)
     {
         return Context.Categories
+            .AsNoTracking()
             .Where(x => x.ClientId == _currentUser.ClientId && x.GroupId == groupId)
             .ToList();
     }

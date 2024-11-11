@@ -37,8 +37,7 @@ public class CategoryController
     }
     
     [HttpGet("getGrouped")]
-    [EndpointSummary("Get all categories")]
-    [EndpointDescription("Get all categories grouped by category-group")]
+    [EndpointSummary("Get all categories grouped by category-group")]
     public BuddyResponse<IEnumerable<GroupCategoryVm>> GetAllGrouped()
     {
         var groupedCategories = _categoryService.GetGrouped();

@@ -1,6 +1,7 @@
 ﻿using BudgetBuddy.Common.Service;
 using BudgetBuddy.Transaction.Model;
 using BudgetBuddy.Transaction.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Data.Repositories;
 
@@ -31,7 +32,13 @@ public class TransactionRepository : Repository<TransactionDao>, ITransactionRep
 
     public TransactionDao Update(TransactionDao model)
     {
-        throw new NotImplementedException();
+        model.UpdatedAt = DateTime.Now;
+        
+        var result = Context.Transactions.Update(model);
+
+        Context.SaveChanges();
+        
+        return result.Entity;
     }
 
     public Task<TransactionDao> UpdateAsync(TransactionDao model)
@@ -46,11 +53,21 @@ public class TransactionRepository : Repository<TransactionDao>, ITransactionRep
 
     public TransactionDao? GetById(int id)
     {
-        throw new NotImplementedException();
+        return Context.Transactions
+            .AsNoTracking()
+            .FirstOrDefault(x => x.Id == id && x.ClientId == _currentUser.ClientId);
     }
 
     public IEnumerable<TransactionDao> GetByIds(IEnumerable<int> ids)
     {
         throw new NotImplementedException();
+    }
+    
+    public override IEnumerable<TransactionDao> GetAll()
+    {
+        return Context.Transactions
+            .AsNoTracking()
+            .Where(x => x.ClientId == _currentUser.ClientId)
+            .ToList();
     }
 }

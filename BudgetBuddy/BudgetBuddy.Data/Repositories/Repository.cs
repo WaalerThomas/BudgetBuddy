@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using BudgetBuddy.Common.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Data.Repositories;
 
@@ -26,7 +27,7 @@ public abstract class Repository<TEntity> where TEntity : class
 
     public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
     {
-        return Context.Set<TEntity>().Where(predicate);
+        return Context.Set<TEntity>().AsNoTracking().Where(predicate);
     }
 
     public virtual TEntity? Get(int id)
@@ -36,7 +37,7 @@ public abstract class Repository<TEntity> where TEntity : class
 
     public virtual IEnumerable<TEntity> GetAll()
     {
-        return Context.Set<TEntity>().ToList();
+        return Context.Set<TEntity>().AsNoTracking().ToList();
     }
 
     public virtual void Remove(TEntity entity)

@@ -1,6 +1,7 @@
 ﻿using BudgetBuddy.Client.Model;
 using BudgetBuddy.Client.Repositories;
 using BudgetBuddy.Common.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Data.Repositories;
 
@@ -55,7 +56,7 @@ public class ClientRepository : Repository<ClientDao>, IClientRepository
 
     public ClientDao? GetByUsername(string username)
     {
-        var client = Context.Clients.FirstOrDefault(c => c.Username == username);
+        var client = Context.Clients.AsNoTracking().FirstOrDefault(c => c.Username == username);
         return client;
     }
 }

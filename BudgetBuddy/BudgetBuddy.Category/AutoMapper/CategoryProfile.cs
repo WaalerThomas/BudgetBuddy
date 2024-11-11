@@ -17,5 +17,7 @@ public class CategoryProfile : Profile
         
         CreateMap<CategoryModel, CategoryDao>()
             .ReverseMap();
+
+        CreateMap<CategoryDao, CategoryVm>();
     }
 }

@@ -6,7 +6,7 @@ using BudgetBuddy.Core.Operation;
 
 namespace BudgetBuddy.Category.Operations;
 
-public class GetCategoriesOperation : Operation<CategoryType, IEnumerable<CategoryModel>>
+public class GetCategoriesOperation : Operation<object, IEnumerable<CategoryModel>>
 {
     private readonly IMapper _mapper;
     private readonly ICategoryRepository _categoryRepository;
@@ -17,9 +17,9 @@ public class GetCategoriesOperation : Operation<CategoryType, IEnumerable<Catego
         _mapper = mapper;
     }
 
-    protected override IEnumerable<CategoryModel> OnOperate(CategoryType categoryType)
+    protected override IEnumerable<CategoryModel> OnOperate(object request)
     {
-        var categories = _categoryRepository.GetByType(categoryType);
+        var categories = _categoryRepository.GetByType(CategoryType.Category);
         var categoryModels = _mapper.Map<IEnumerable<CategoryModel>>(categories);
         return categoryModels;
     }

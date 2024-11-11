@@ -16,4 +16,22 @@ public class TransactionService : ServiceBase, ITransactionService
         var operation = CreateOperation<CreateTransactionOperation>();
         return operation.Operate(transactionModel);
     }
+
+    public IEnumerable<TransactionModel> Get()
+    {
+        var operation = CreateOperation<GetTransactionsOperation>();
+        return operation.Operate();
+    }
+
+    public TransactionModel? GetById(int id)
+    {
+        var operation = CreateOperation<GetTransactionByIdOperation>();
+        return operation.Operate(id);
+    }
+
+    public TransactionModel Update(TransactionModel transactionModel)
+    {
+        var operation = CreateOperation<UpdateTransactionOperation>();
+        return operation.Operate(transactionModel);
+    }
 }
