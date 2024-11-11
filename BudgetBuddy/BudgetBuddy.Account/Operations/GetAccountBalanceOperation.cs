@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using BudgetBuddy.Account.Repositories;
+﻿using BudgetBuddy.Account.Repositories;
 using BudgetBuddy.Contracts.Interface.Transaction;
 using BudgetBuddy.Contracts.Model.Account;
 using BudgetBuddy.Core.Exceptions;
