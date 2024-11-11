@@ -1,4 +1,5 @@
-﻿using BudgetBuddy.Transaction.AutoMapper;
+﻿using BudgetBuddy.Contracts.Interface.Transaction;
+using BudgetBuddy.Transaction.AutoMapper;
 using BudgetBuddy.Transaction.Operations;
 using BudgetBuddy.Transaction.Service;
 using Microsoft.Extensions.DependencyInjection;

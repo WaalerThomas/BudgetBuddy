@@ -2,6 +2,7 @@
 using BudgetBuddy.Client.Model;
 using BudgetBuddy.Client.Repositories;
 using BudgetBuddy.Client.Service;
+using BudgetBuddy.Contracts.Interface.Client;
 using BudgetBuddy.Contracts.Model.Client;
 using BudgetBuddy.Core.Exceptions;
 using BudgetBuddy.Core.Operation;

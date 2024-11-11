@@ -3,6 +3,7 @@ using AutoMapper;
 using BudgetBuddy.Client.Request;
 using BudgetBuddy.Client.Service;
 using BudgetBuddy.Client.ViewModel;
+using BudgetBuddy.Contracts.Interface.Client;
 using BudgetBuddy.Contracts.Model.Client;
 using BudgetBuddy.Contracts.Model.Common;
 using BudgetBuddy.Core.Exceptions;

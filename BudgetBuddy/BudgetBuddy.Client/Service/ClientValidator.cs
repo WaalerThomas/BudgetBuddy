@@ -1,4 +1,5 @@
-﻿using BudgetBuddy.Contracts.Interface.Common;
+﻿using BudgetBuddy.Contracts.Interface.Client;
+using BudgetBuddy.Contracts.Interface.Common;
 using BudgetBuddy.Contracts.Model.Client;
 using BudgetBuddy.Core.Exceptions;
 using FluentValidation;

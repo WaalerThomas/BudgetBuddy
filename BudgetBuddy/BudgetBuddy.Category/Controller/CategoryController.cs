@@ -2,6 +2,7 @@
 using BudgetBuddy.Category.Request;
 using BudgetBuddy.Category.Service;
 using BudgetBuddy.Category.ViewModel;
+using BudgetBuddy.Contracts.Interface.Category;
 using BudgetBuddy.Contracts.Model.Category;
 using BudgetBuddy.Contracts.Model.Common;
 using BudgetBuddy.Core.Exceptions;
@@ -41,8 +42,7 @@ public class CategoryController
     public BuddyResponse<IEnumerable<GroupCategoryVm>> GetAllGrouped()
     {
         var groupedCategories = _categoryService.GetGrouped();
-        
-        return new BuddyResponse<IEnumerable<GroupCategoryVm>>(groupedCategories);
+        return new BuddyResponse<IEnumerable<GroupCategoryVm>>(_mapper.Map<IEnumerable<GroupCategoryVm>>(groupedCategories));
     }
     
     [HttpGet("groups")]

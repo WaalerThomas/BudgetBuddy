@@ -1,4 +1,5 @@
 ﻿using BudgetBuddy.Client.Operations;
+using BudgetBuddy.Contracts.Interface.Client;
 using BudgetBuddy.Contracts.Model.Client;
 using BudgetBuddy.Core.Operation;
 using BudgetBuddy.Core.Service;

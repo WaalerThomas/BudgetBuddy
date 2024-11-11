@@ -1,6 +1,6 @@
 ﻿using BudgetBuddy.Contracts.Model.Client;
 
-namespace BudgetBuddy.Client.Service;
+namespace BudgetBuddy.Contracts.Interface.Client;
 
 public interface IClientService
 {

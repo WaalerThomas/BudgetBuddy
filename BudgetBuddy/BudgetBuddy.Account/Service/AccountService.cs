@@ -1,6 +1,7 @@
 using AutoMapper;
 using BudgetBuddy.Account.Operations;
 using BudgetBuddy.Account.Repositories;
+using BudgetBuddy.Contracts.Interface.Account;
 using BudgetBuddy.Contracts.Model.Account;
 using BudgetBuddy.Core.Operation;
 using BudgetBuddy.Core.Service;
@@ -43,5 +44,11 @@ public class AccountService : ServiceBase, IAccountService
     {
         var operation = CreateOperation<UpdateAccountOperation>();
         return operation.Operate(account);
+    }
+
+    public AccountBalanceModel GetBalance(int id)
+    {
+        var operation = CreateOperation<GetAccountBalanceOperation>();
+        return operation.Operate(id);
     }
 }

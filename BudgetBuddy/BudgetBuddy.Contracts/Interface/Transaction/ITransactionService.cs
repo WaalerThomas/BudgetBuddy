@@ -1,6 +1,6 @@
 ﻿using BudgetBuddy.Contracts.Model.Transaction;
 
-namespace BudgetBuddy.Transaction.Service;
+namespace BudgetBuddy.Contracts.Interface.Transaction;
 
 public interface ITransactionService
 {

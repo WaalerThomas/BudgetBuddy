@@ -20,5 +20,9 @@ public class CategoryProfile : Profile
             .ReverseMap();
 
         CreateMap<CategoryDao, CategoryVm>();
+        CreateMap<CategoryDao, GroupModel>();
+        
+        CreateMap<GroupCategoryModel, GroupCategoryVm>();
+        CreateMap<GroupModel, GroupVm>();
     }
 }

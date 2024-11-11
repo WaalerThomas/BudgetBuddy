@@ -1,5 +1,5 @@
 ﻿using BudgetBuddy.Category.Operations;
-using BudgetBuddy.Category.ViewModel;
+using BudgetBuddy.Contracts.Interface.Category;
 using BudgetBuddy.Contracts.Model.Category;
 using BudgetBuddy.Core.Operation;
 using BudgetBuddy.Core.Service;
@@ -42,7 +42,7 @@ public class CategoryService : ServiceBase, ICategoryService
         return operation.Operate(categoryModel);
     }
 
-    public IEnumerable<GroupCategoryVm> GetGrouped()
+    public IEnumerable<GroupCategoryModel> GetGrouped()
     {
         var operation = CreateOperation<GetGroupedCategoriesOperation>();
         return operation.Operate();

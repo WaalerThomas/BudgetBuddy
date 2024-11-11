@@ -1,7 +1,6 @@
-﻿using BudgetBuddy.Account.ViewModel;
-using BudgetBuddy.Contracts.Model.Account;
+﻿using BudgetBuddy.Contracts.Model.Account;
 
-namespace BudgetBuddy.Account.Service;
+namespace BudgetBuddy.Contracts.Interface.Account;
 
 public interface IAccountService
 {
@@ -9,4 +8,6 @@ public interface IAccountService
     AccountModel? Get(int id);
     IEnumerable<AccountModel> Get();
     AccountModel Update(AccountModel account);
+
+    AccountBalanceModel GetBalance(int id);
 }

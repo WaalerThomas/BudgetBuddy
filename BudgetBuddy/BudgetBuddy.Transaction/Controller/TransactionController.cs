@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BudgetBuddy.Contracts.Interface.Transaction;
 using BudgetBuddy.Contracts.Model.Common;
 using BudgetBuddy.Contracts.Model.Transaction;
 using BudgetBuddy.Core.Exceptions;

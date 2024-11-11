@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BudgetBuddy.Account.Request;
-using BudgetBuddy.Account.Service;
 using BudgetBuddy.Account.ViewModel;
+using BudgetBuddy.Contracts.Interface.Account;
 using BudgetBuddy.Contracts.Model.Account;
 using BudgetBuddy.Contracts.Model.Common;
 using BudgetBuddy.Core.Exceptions;
@@ -63,5 +63,13 @@ public class AccountController : ControllerBase
         
         accountModel = _accountService.Update(accountModel);
         return new BuddyResponse<AccountVm>(_mapper.Map<AccountModel, AccountVm>(accountModel));
+    }
+    
+    [HttpGet("balance/{id:int}")]
+    [EndpointSummary("Get account balance")]
+    public BuddyResponse<AccountBalanceVm> GetBalance(int id)
+    {
+        var balance = _accountService.GetBalance(id);
+        return new BuddyResponse<AccountBalanceVm>(_mapper.Map<AccountBalanceVm>(balance));
     }
 }

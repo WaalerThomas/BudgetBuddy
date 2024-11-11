@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using BudgetBuddy.Client.Repositories;
 using BudgetBuddy.Client.Service;
+using BudgetBuddy.Contracts.Interface.Client;
 using BudgetBuddy.Contracts.Model.Client;
 using BudgetBuddy.Core.Operation;
 using FluentValidation;

@@ -2,6 +2,7 @@
 using BudgetBuddy.Client.Operations;
 using BudgetBuddy.Client.Repositories;
 using BudgetBuddy.Client.Service;
+using BudgetBuddy.Contracts.Interface.Client;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BudgetBuddy.Client;
