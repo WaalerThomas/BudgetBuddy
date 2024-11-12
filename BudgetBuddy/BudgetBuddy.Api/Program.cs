@@ -33,12 +33,11 @@ var builder = WebApplication.CreateBuilder(args);
                 OnMessageReceived = context =>
                 {
                     var token = context.Request.Cookies["prrrKeKeKedip"];
-                    if (token is null)
+                    if (token is not null)
                     {
-                        return Task.FromResult(0);
+                        context.Token = token;
                     }
                     
-                    context.Token = token;
                     return Task.CompletedTask;
                 }
             };
