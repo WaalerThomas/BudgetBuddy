@@ -16,7 +16,7 @@ public class BuddyConfiguration : IBuddyConfiguration
     {
         get
         {
-            var result = _configuration["JwtKey"];
+            var result = _configuration["Jwt:Key"];
             if (result is null)
             {
                 throw new BuddyException("JwtKey missing from configuration");
@@ -30,10 +30,24 @@ public class BuddyConfiguration : IBuddyConfiguration
     {
         get
         {
-            var result = _configuration["JwtIssuer"];
+            var result = _configuration["Jwt:Issuer"];
             if (result is null)
             {
                 throw new BuddyException("JwtIssuer missing from configuration");
+            }
+            
+            return result;
+        }
+    }
+    
+    public string Pepper
+    {
+        get
+        {
+            var result = _configuration["Pepper"];
+            if (result is null)
+            {
+                throw new BuddyException("Pepper missing from configuration");
             }
             
             return result;
