@@ -59,4 +59,9 @@ public class ClientRepository : Repository<ClientDao>, IClientRepository
         var client = Context.Clients.AsNoTracking().FirstOrDefault(c => c.Username == username);
         return client;
     }
+
+    public ClientDao? GetById(Guid id)
+    {
+        return Context.Clients.AsNoTracking().FirstOrDefault(x => x.Id == id);
+    }
 }

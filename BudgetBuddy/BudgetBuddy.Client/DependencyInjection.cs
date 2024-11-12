@@ -1,6 +1,5 @@
 ﻿using BudgetBuddy.Client.AutoMapper;
 using BudgetBuddy.Client.Operations;
-using BudgetBuddy.Client.Repositories;
 using BudgetBuddy.Client.Service;
 using BudgetBuddy.Contracts.Interface.Client;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,10 +17,17 @@ public static class DependencyInjection
         services.AddScoped<IClientValidator, ClientValidator>();
         services.AddScoped<IPasswordService, PasswordService>();
 
+        AddOperations(services);
+        
+        return services;
+    }
+    
+    private static void AddOperations(this IServiceCollection services)
+    {
         services.AddScoped<LoginClientOperation>();
         services.AddScoped<CreateClientOperation>();
         services.AddScoped<GetClientByUsernameOperation>();
-        
-        return services;
+        services.AddScoped<UnlockClientOperation>();
+        services.AddScoped<IncrementFailedLoginAttemptsOperation>();
     }
 }

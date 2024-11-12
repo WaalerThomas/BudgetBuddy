@@ -8,4 +8,8 @@ public class ClientModel
     public byte[]? Salt { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    public DateTime? LockoutEnd { get; set; }
+    
+    public bool IsLockedOut => LockoutEnd.HasValue && LockoutEnd.Value > DateTime.UtcNow;
+    public bool LockoutExpired => LockoutEnd.HasValue && LockoutEnd.Value < DateTime.UtcNow;
 }

@@ -34,4 +34,16 @@ public class ClientService : ServiceBase, IClientService
         var operation = CreateOperation<CreateClientOperation>();
         return operation.Operate(client);
     }
+
+    public ClientModel Unlock(Guid id)
+    {
+        var operation = CreateOperation<UnlockClientOperation>();
+        return operation.Operate(id);
+    }
+
+    public ClientModel IncrementFailedLoginAttempts(Guid id)
+    {
+        var operation = CreateOperation<IncrementFailedLoginAttemptsOperation>();
+        return operation.Operate(id);
+    }
 }

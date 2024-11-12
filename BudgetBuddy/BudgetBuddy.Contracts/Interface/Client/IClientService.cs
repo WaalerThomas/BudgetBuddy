@@ -8,4 +8,6 @@ public interface IClientService
     ClientModel? GetByUsername(string username);
     string Login(ClientModel client);
     ClientModel Create(ClientModel client);
+    ClientModel Unlock(Guid id);
+    ClientModel IncrementFailedLoginAttempts(Guid id);
 }

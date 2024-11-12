@@ -8,4 +8,6 @@ public class ClientDao : BuddyDao
     public required string Username { get; set; }
     public required string Password { get; set; }
     public byte[]? Salt { get; set; }
+    public int FailedLoginAttempts { get; set; }
+    public DateTime? LockoutEnd { get; set; }
 }
