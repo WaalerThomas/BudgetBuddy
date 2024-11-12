@@ -14,6 +14,8 @@ using Microsoft.IdentityModel.Protocols.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
+const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 {
     var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
@@ -26,6 +28,20 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
+            options.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var token = context.Request.Cookies["prrrKeKeKedip"];
+                    if (token is null)
+                    {
+                        return Task.FromResult(0);
+                    }
+                    
+                    context.Token = token;
+                    return Task.CompletedTask;
+                }
+            };
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
@@ -84,6 +100,17 @@ var builder = WebApplication.CreateBuilder(args);
         options.AddSecurityRequirement(securityRequirement);
     });
     builder.Services.AddControllers();
+
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: myAllowSpecificOrigins,
+            policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+    });
 }
 
 var app = builder.Build();
@@ -94,11 +121,11 @@ var app = builder.Build();
         app.UseSwaggerUI();
     }
 
-    app.UseAuthentication();
     app.UseAuthorization();
     
     app.UseExceptionHandler("/error");
     app.UseHttpsRedirection();
+    app.UseCors(myAllowSpecificOrigins);
     
     app.MapControllers();
     app.Run();

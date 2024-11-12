@@ -7,7 +7,9 @@ using BudgetBuddy.Contracts.Interface.Client;
 using BudgetBuddy.Contracts.Model.Client;
 using BudgetBuddy.Contracts.Model.Common;
 using BudgetBuddy.Core.Exceptions;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -21,15 +23,21 @@ namespace BudgetBuddy.Client.Controller;
 [Route("api/client")]
 public class ClientController
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IConfiguration _configuration;
     private readonly IMapper _mapper;
     private readonly IClientService _clientService;
     
-    public ClientController(IConfiguration configuration, IClientService clientService, IMapper mapper)
+    public ClientController(
+        IConfiguration configuration,
+        IClientService clientService,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor)
     {
         _configuration = configuration;
         _clientService = clientService;
         _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpPost]
@@ -57,6 +65,22 @@ public class ClientController
     {
         var loginClient = _mapper.Map<LoginClientRequest, ClientModel>(loginClientRequest);
         var token = _clientService.Login(loginClient);
+        
+        // TODO: Add token to the response header instead of the body as cookie
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext is null)
+        {
+            throw new BuddyException("HttpContext is null");
+        }
+        
+        httpContext.Response.Cookies.Append("prrrKeKeKedip", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.Now.AddMinutes(30)
+            });
+        
         return new BuddyResponse<string>(token);
     }
     
