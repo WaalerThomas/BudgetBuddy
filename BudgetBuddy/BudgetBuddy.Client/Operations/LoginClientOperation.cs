@@ -1,6 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using BudgetBuddy.Client.Service;
+using BudgetBuddy.Common.Service;
 using BudgetBuddy.Contracts.Interface.Client;
 using BudgetBuddy.Contracts.Model.Client;
 using BudgetBuddy.Core.Exceptions;
@@ -13,14 +15,14 @@ namespace BudgetBuddy.Client.Operations;
 
 public class LoginClientOperation : Operation<ClientModel, string>
 {
-    private readonly IConfiguration _configuration;
+    private readonly IBuddyConfiguration _configuration;
     private readonly IClientValidator _clientValidator;
     private readonly IClientService _clientService;
     private readonly IPasswordService _passwordService;
 
     public LoginClientOperation(
         IClientValidator clientValidator,
-        IConfiguration configuration,
+        IBuddyConfiguration configuration,
         IClientService clientService,
         IPasswordService passwordService)
     {
@@ -49,19 +51,19 @@ public class LoginClientOperation : Operation<ClientModel, string>
             throw new BuddyException("Invalid username or password");
         }
 
-        if (clientModel.Salt is null)
-        {
-            throw new BuddyException("No salting exists for the client");
-        }
-
-        if (client.IsLockedOut)
+        if (clientModel.IsLockedOut)
         {
             throw new BuddyException("Account is locked out");
         }
 
-        if (client.LockoutExpired)
+        if (clientModel.LockoutExpired)
         {
-            client = _clientService.Unlock(clientModel.Id);
+            clientModel = _clientService.Unlock(clientModel.Id);
+        }
+        
+        if (clientModel.Salt is null)
+        {
+            throw new BuddyException("No salting exists for the client");
         }
 
         var isValidPassword = _passwordService.Verify(client.Password, clientModel.Password, clientModel.Salt);
@@ -74,20 +76,18 @@ public class LoginClientOperation : Operation<ClientModel, string>
 
     private string CreateToken(string clientId, string username)
     {
-        // TODO: Find a better way to get the key from the configuration
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.JwtKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-        // TODO: Add the client id and username to the token through claims
         
-        var securityToken = new JwtSecurityToken(_configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Issuer"],
-            claims: null,
+        var securityToken = new JwtSecurityToken(_configuration.JwtIssuer,
+            audience: _configuration.JwtIssuer,
+            claims:
+            [
+                new Claim("client_id", clientId),
+                new Claim("username", username)
+            ],
             expires: DateTime.Now.AddMinutes(30),
             signingCredentials: credentials);
-        
-        securityToken.Payload["client_id"] = clientId;
-        securityToken.Payload["username"] = username;
 
         var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
         return token;

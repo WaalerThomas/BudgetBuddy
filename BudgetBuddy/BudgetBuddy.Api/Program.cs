@@ -10,6 +10,7 @@ using BudgetBuddy.Core.Operation;
 using BudgetBuddy.Data;
 using BudgetBuddy.Transaction;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Protocols.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -17,6 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 {
     var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
     var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
+    if (jwtKey is null || jwtIssuer is null)
+    {
+        throw new InvalidConfigurationException("Jwt configuration missing");
+    }
 
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
@@ -42,6 +47,7 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+    builder.Services.AddScoped<IBuddyConfiguration, BuddyConfiguration>();
     builder.Services.AddScoped<ICommonValidators, CommonValidators>();
     builder.Services.AddScoped<IOperationFactory, OperationFactory>();
 

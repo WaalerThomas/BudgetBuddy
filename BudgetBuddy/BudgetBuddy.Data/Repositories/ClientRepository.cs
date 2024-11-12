@@ -31,7 +31,11 @@ public class ClientRepository : Repository<ClientDao>, IClientRepository
 
     public ClientDao Update(ClientDao client)
     {
-        throw new NotImplementedException();
+        client.UpdatedAt = DateTime.UtcNow;
+        
+        var result = Context.Clients.Update(client);
+        Context.SaveChanges();
+        return result.Entity;
     }
 
     public Task<ClientDao> UpdateAsync(ClientDao client)
