@@ -53,4 +53,32 @@ public class BuddyConfiguration : IBuddyConfiguration
             return result;
         }
     }
+
+    public int KeySize
+    {
+        get
+        {
+            var result = _configuration["KeySize"];
+            if (result is null)
+            {
+                throw new BuddyException("KeySize missing from configuration");
+            }
+            
+            return int.Parse(result);
+        }
+    }
+
+    public int Iterations
+    {
+        get
+        {
+            var result = _configuration["Iterations"];
+            if (result is null)
+            {
+                throw new BuddyException("Iterations missing from configuration");
+            }
+            
+            return int.Parse(result);
+        }
+    }
 }

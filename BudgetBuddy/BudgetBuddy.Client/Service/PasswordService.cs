@@ -8,10 +8,10 @@ public class PasswordService : IPasswordService
 {
     private readonly IBuddyConfiguration _buddyConfiguration;
 
-    private const int KeySize = 32;
-    private const int Iterations = 350000;
     private static readonly HashAlgorithmName HashAlgorithm = HashAlgorithmName.SHA512;
     
+    private readonly int _keySize;
+    private readonly int _iterations;
     private readonly string _pepper;
     
     public PasswordService(IBuddyConfiguration buddyConfiguration)
@@ -19,20 +19,22 @@ public class PasswordService : IPasswordService
         _buddyConfiguration = buddyConfiguration;
         
         _pepper = buddyConfiguration.Pepper;
+        _keySize = buddyConfiguration.KeySize;
+        _iterations = buddyConfiguration.Iterations;
     }
 
     public string Hash(string password, out byte[] salt)
     {
-        salt = RandomNumberGenerator.GetBytes(KeySize);
+        salt = RandomNumberGenerator.GetBytes(_keySize);
 
         password = _pepper + password;
 
         var hash = Rfc2898DeriveBytes.Pbkdf2(
             Encoding.UTF8.GetBytes(password),
             salt,
-            Iterations,
+            _iterations,
             HashAlgorithm,
-            KeySize);
+            _keySize);
 
         return Convert.ToHexString(hash);
     }
@@ -41,7 +43,7 @@ public class PasswordService : IPasswordService
     {
         password = _pepper + password;
         
-        var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, HashAlgorithm, KeySize);
+        var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, salt, _iterations, HashAlgorithm, _keySize);
 
         return CryptographicOperations.FixedTimeEquals(hashToCompare, Convert.FromHexString(hash));
     }
