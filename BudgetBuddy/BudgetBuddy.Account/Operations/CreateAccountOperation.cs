@@ -27,6 +27,7 @@ public class CreateAccountOperation : Operation<AccountModel, AccountModel>
     protected override AccountModel OnOperate(AccountModel account)
     {
         _accountValidator.ValidateAndThrow(account);
+        _accountValidator.ValidateNameUniqueness(account);
         
         var accountDao = _mapper.Map<AccountModel, AccountDao>(account);
         accountDao = _accountRepository.Create(accountDao);

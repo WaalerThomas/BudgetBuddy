@@ -60,6 +60,24 @@ namespace BudgetBuddy.Account.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account name needs to be unique.
+        /// </summary>
+        public static string AccountNameNotUnique {
+            get {
+                return ResourceManager.GetString("AccountNameNotUnique", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account not found.
+        /// </summary>
+        public static string AccountNotFound {
+            get {
+                return ResourceManager.GetString("AccountNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account type is required.
         /// </summary>
         public static string AccountTypeRequired {

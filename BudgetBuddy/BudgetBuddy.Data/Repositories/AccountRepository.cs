@@ -73,6 +73,13 @@ public class AccountRepository : Repository<AccountDao>, IAccountRepository
         throw new NotImplementedException();
     }
 
+    public AccountDao? GetByName(string name)
+    {
+        return Context.Accounts
+            .AsNoTracking()
+            .FirstOrDefault(x => x.ClientId == _currentUser.ClientId && x.Name == name);
+    }
+
     public override IEnumerable<AccountDao> GetAll()
     {
         return Context.Accounts

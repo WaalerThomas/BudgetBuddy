@@ -5,4 +5,5 @@ namespace BudgetBuddy.Account.Repositories;
 
 public interface IAccountRepository : IBuddyRepository<AccountDao>
 {
+    AccountDao? GetByName(string name);
 }

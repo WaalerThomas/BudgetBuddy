@@ -24,4 +24,10 @@
     <data name="AccountTypeRequired" xml:space="preserve">
         <value>Account type is required</value>
     </data>
+    <data name="AccountNotFound" xml:space="preserve">
+        <value>Account not found</value>
+    </data>
+    <data name="AccountNameNotUnique" xml:space="preserve">
+        <value>Account name needs to be unique</value>
+    </data>
 </root>

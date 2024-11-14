@@ -3,6 +3,7 @@ using BudgetBuddy.Account.Model;
 using BudgetBuddy.Account.Operations;
 using BudgetBuddy.Account.Repositories;
 using BudgetBuddy.Account.Service;
+using BudgetBuddy.Contracts.Model.Account;
 using BudgetBuddy.Tests.Common;
 using NSubstitute;
 
@@ -35,5 +36,16 @@ public class CreateAccountOperationTests
         
         // assert
         _accountRepository.Received().Create(Arg.Any<AccountDao>());
+    }
+
+    [Test]
+    public void CreateAccount_ShouldCallValidateNameUniqueness()
+    {
+        // act
+        var account = TestHelper.CreateAccount();
+        _operation.Operate(account);
+        
+        // assert
+        _accountValidator.Received().ValidateNameUniqueness(Arg.Is(account));
     }
 }

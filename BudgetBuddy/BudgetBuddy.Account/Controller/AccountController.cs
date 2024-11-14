@@ -53,14 +53,7 @@ public class AccountController : ControllerBase
     [EndpointDescription("Updates an existing account for the user")]
     public BuddyResponse<AccountVm> Update([FromBody] UpdateAccountRequest updateAccountRequest)
     {
-        var accountModel = _accountService.Get(updateAccountRequest.Id);
-        if (accountModel is null)
-        {
-            throw new BuddyException("Account not found");
-        }
-        
-        _mapper.Map(updateAccountRequest, accountModel);
-        
+        var accountModel = _mapper.Map<UpdateAccountRequest, AccountModel>(updateAccountRequest);
         accountModel = _accountService.Update(accountModel);
         return new BuddyResponse<AccountVm>(_mapper.Map<AccountModel, AccountVm>(accountModel));
     }

@@ -19,10 +19,8 @@ public class GetAllAccountsOperation : Operation<object, IEnumerable<AccountMode
 
     protected override IEnumerable<AccountModel> OnOperate(object request)
     {
-        // TODO: There should probably be some kind of paging here
-        
-        var accountDaos = _accountRepository.GetAll();
-        var accountModels =_mapper.Map<IEnumerable<AccountDao>, IEnumerable<AccountModel>>(accountDaos);
+        var accountDaoList = _accountRepository.GetAll();
+        var accountModels =_mapper.Map<IEnumerable<AccountDao>, IEnumerable<AccountModel>>(accountDaoList);
         return accountModels;
     }
 }

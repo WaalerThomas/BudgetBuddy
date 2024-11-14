@@ -4,17 +4,7 @@ public abstract class Operation<TRequest, TResponse> : IOperation<TRequest, TRes
 {
     public virtual TResponse Operate(TRequest request = default(TRequest))
     {
-        var response = default(TResponse);
-
-        try
-        {
-            response = OnOperate(request);
-        }
-        catch (Exception ex)
-        {
-            // TODO: Throw a custom exception
-            throw new Exception(ex.Message, ex);
-        }
+        var response = OnOperate(request);
 
         return response;
     }
