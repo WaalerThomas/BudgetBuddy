@@ -1,11 +1,14 @@
 ﻿using BudgetBuddy.Contracts.Enums;
 using BudgetBuddy.Contracts.Model.Account;
 using BudgetBuddy.Contracts.Model.Category;
+using BudgetBuddy.Contracts.Model.Transaction;
 
 namespace BudgetBuddy.Tests.Common;
 
 public abstract class TestHelper
 {
+    private static readonly DateOnly DefaultDate = DateOnly.Parse("2021-01-01");
+
     public static AccountModel CreateAccount(
         int id = 1,
         string clientId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -54,6 +57,93 @@ public abstract class TestHelper
             GoalAmount = goalAmount,
             Type = CategoryType.Category, 
             GroupId = groupId
+        };
+    }
+
+    public static TransactionModel CreateCategoryTransaction(
+        int id = 1,
+        string clientId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        DateOnly? date = null,
+        TransactionType type = TransactionType.Category,
+        decimal amount = -20,
+        int? categoryId = 2,
+        int? fromAccountId = 1,
+        int? toAccountId = null,
+        string memo = "Groceries",
+        TransactionStatus status = TransactionStatus.Settled)
+    {
+        date ??= DefaultDate;
+        
+        return new TransactionModel
+        {
+            Id = id,
+            ClientId = Guid.Parse(clientId),
+            Date = date.Value,
+            Type = type,
+            Amount = amount,
+            CategoryId = categoryId,
+            FromAccountId = fromAccountId,
+            ToAccountId = toAccountId,
+            Memo = memo,
+            Status = status
+        };
+    }
+    
+    public static TransactionModel CreateAccountTransferModel(
+        int id = 1,
+        string clientId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        DateOnly? date = null,
+        TransactionType type = TransactionType.AccountTransfer,
+        decimal amount = 200,
+        int? categoryId = null,
+        int? fromAccountId = 1,
+        int? toAccountId = 2,
+        string memo = "Transfer",
+        TransactionStatus status = TransactionStatus.Settled)
+    {
+        date ??= DefaultDate;
+        
+        return new TransactionModel
+        {
+            Id = id,
+            ClientId = Guid.Parse(clientId),
+            Date = date.Value,
+            Type = type,
+            Amount = amount,
+            CategoryId = categoryId,
+            FromAccountId = fromAccountId,
+            ToAccountId = toAccountId,
+            Memo = memo,
+            Status = status
+        };
+    }
+    
+    public static TransactionModel CreateBalanceAdjustmentTransaction(
+        int id = 1,
+        string clientId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        DateOnly? date = null,
+        TransactionType type = TransactionType.BalanceAdjustment,
+        decimal amount = 200,
+        int? categoryId = null,
+        int? fromAccountId = null,
+        int? toAccountId = 1,
+        string memo = "Adjustment",
+        TransactionStatus status = TransactionStatus.Settled)
+    {
+        date ??= DefaultDate;
+        
+        return new TransactionModel
+        {
+            Id = id,
+            ClientId = Guid.Parse(clientId),
+            Date = date.Value,
+            Type = type,
+            Amount = amount,
+            CategoryId = categoryId,
+            FromAccountId = fromAccountId,
+            ToAccountId = toAccountId,
+            Memo = memo,
+            Status = status
         };
     }
 }

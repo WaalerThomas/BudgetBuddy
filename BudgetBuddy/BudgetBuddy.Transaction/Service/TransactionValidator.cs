@@ -34,7 +34,7 @@ public class TransactionValidator : AbstractValidator<TransactionModel>, ITransa
         }
     }
 
-    private void ValidateCategoryTransaction(TransactionModel transactionModel)
+    private static void ValidateCategoryTransaction(TransactionModel transactionModel)
     {
         const string typeErrorMessage = "category transactions";
         
@@ -62,7 +62,7 @@ public class TransactionValidator : AbstractValidator<TransactionModel>, ITransa
         }
     }
     
-    private void ValidateAccountTransferTransaction(TransactionModel transactionModel)
+    private static void ValidateAccountTransferTransaction(TransactionModel transactionModel)
     {
         const string typeErrorMessage = "account transfer transactions";
         
@@ -90,7 +90,7 @@ public class TransactionValidator : AbstractValidator<TransactionModel>, ITransa
         }
     }
     
-    private void ValidateBalanceAdjustmentTransaction(TransactionModel transactionModel)
+    private static void ValidateBalanceAdjustmentTransaction(TransactionModel transactionModel)
     {
         const string typeErrorMessage = "balance adjustment transactions";
         

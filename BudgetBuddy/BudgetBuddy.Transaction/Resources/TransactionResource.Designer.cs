@@ -76,5 +76,23 @@ namespace BudgetBuddy.Transaction.Resources {
                 return ResourceManager.GetString("FieldIsRequiredForType", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transaction not found.
+        /// </summary>
+        public static string TransactionNotFound {
+            get {
+                return ResourceManager.GetString("TransactionNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transaction type can not be changed.
+        /// </summary>
+        public static string TypeCannotChange {
+            get {
+                return ResourceManager.GetString("TypeCannotChange", resourceCulture);
+            }
+        }
     }
 }

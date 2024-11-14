@@ -4,6 +4,7 @@ using BudgetBuddy.Core.Exceptions;
 using BudgetBuddy.Core.Operation;
 using BudgetBuddy.Transaction.Model;
 using BudgetBuddy.Transaction.Repositories;
+using BudgetBuddy.Transaction.Resources;
 using BudgetBuddy.Transaction.Service;
 using FluentValidation;
 
@@ -30,20 +31,20 @@ public class UpdateTransactionOperation : Operation<TransactionModel, Transactio
         _transactionValidator.ValidateAndThrow(transactionModel);
         _transactionValidator.ValidateTransaction(transactionModel);
 
-        var transactionDao = _transactionRepository.GetById(transactionModel.Id);
-        if (transactionDao == null)
+        var existingTransactionDao = _transactionRepository.GetById(transactionModel.Id);
+        if (existingTransactionDao is null)
         {
-            throw new BuddyException("Transaction not found");
+            throw new BuddyException(TransactionResource.TransactionNotFound);
         }
         
-        if (transactionModel.Type != transactionDao.Type)
+        if (transactionModel.Type != existingTransactionDao.Type)
         {
-            throw new BuddyException("Transaction type cannot be changed");
+            throw new BuddyException(TransactionResource.TypeCannotChange);
         }
 
-        transactionDao = _mapper.Map<TransactionDao>(transactionModel);
-        var updatedTransaction = _transactionRepository.Update(transactionDao);
+        var transactionDao = _mapper.Map<TransactionDao>(transactionModel);
+        transactionDao = _transactionRepository.Update(transactionDao);
         
-        return _mapper.Map<TransactionModel>(updatedTransaction);
+        return _mapper.Map<TransactionModel>(transactionDao);
     }
 }

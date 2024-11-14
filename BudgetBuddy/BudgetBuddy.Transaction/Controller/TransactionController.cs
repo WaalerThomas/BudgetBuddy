@@ -4,6 +4,7 @@ using BudgetBuddy.Contracts.Model.Common;
 using BudgetBuddy.Contracts.Model.Transaction;
 using BudgetBuddy.Core.Exceptions;
 using BudgetBuddy.Transaction.Request;
+using BudgetBuddy.Transaction.Resources;
 using BudgetBuddy.Transaction.Service;
 using BudgetBuddy.Transaction.ViewModel;
 using Microsoft.AspNetCore.Authorization;
@@ -50,7 +51,7 @@ public class TransactionController
         var transactionModel = _transactionService.GetById(updateTransactionRequest.Id);
         if (transactionModel == null)
         {
-            throw new BuddyException("Transaction not found");
+            throw new BuddyException(TransactionResource.TransactionNotFound);
         }
 
         _mapper.Map(updateTransactionRequest, transactionModel);
