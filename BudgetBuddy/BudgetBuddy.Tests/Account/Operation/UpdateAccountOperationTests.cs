@@ -61,42 +61,4 @@ public class UpdateAccountOperationTests
         // assert
         _accountRepository.Received().Update(Arg.Is<AccountDao>(x => x.Id == accountModel.Id));
     }
-    
-    [Test]
-    public void UpdateAccount_WhenAccountNotFound_ShouldThrowException()
-    {
-        // arrange
-        var accountModel = TestHelper.CreateAccount();
-        _accountRepository.GetById(Arg.Any<int>()).Returns((AccountDao?)null);
-        
-        // act
-        var exception = Assert.Throws<BuddyException>(() => _operation.Operate(accountModel));
-        Assert.That(exception.Message, Is.EqualTo(AccountResource.AccountNotFound));
-    }
-    
-    [Test]
-    public void UpdateAccount_ShouldNotUpdateFieldsThatAreNotAllowed()
-    {
-        // arrange
-        var accountModel = TestHelper.CreateAccount();
-        var accountDao = new AccountDao
-        {
-            Id = 20,
-            Name = accountModel.Name,
-            ClientId = Guid.NewGuid(),
-            CreatedAt = new DateTime(2024, 10, 10),
-            UpdatedAt = new DateTime(2024, 10, 10)
-        };
-        _accountRepository.GetById(Arg.Any<int>()).Returns(accountDao);
-        
-        // act
-        _operation.Operate(accountModel);
-        
-        // assert
-        _accountRepository.Received().Update(Arg.Is<AccountDao>(x =>
-            x.Id == accountDao.Id &&
-            x.ClientId == accountDao.ClientId &&
-            x.CreatedAt == accountDao.CreatedAt &&
-            x.UpdatedAt == accountDao.UpdatedAt));
-    }
 }

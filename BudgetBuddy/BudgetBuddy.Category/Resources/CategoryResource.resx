@@ -45,4 +45,7 @@
     <data name="AssigningGroupToGroup" xml:space="preserve">
         <value>Groups can not belong to another group</value>
     </data>
+    <data name="CategoryNotFound" xml:space="preserve">
+        <value>CategoryNotFound</value>
+    </data>
 </root>

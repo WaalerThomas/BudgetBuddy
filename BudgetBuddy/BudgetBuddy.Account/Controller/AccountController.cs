@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BudgetBuddy.Account.Request;
+using BudgetBuddy.Account.Resources;
 using BudgetBuddy.Account.ViewModel;
 using BudgetBuddy.Contracts.Interface.Account;
 using BudgetBuddy.Contracts.Model.Account;
@@ -53,7 +54,14 @@ public class AccountController : ControllerBase
     [EndpointDescription("Updates an existing account for the user")]
     public BuddyResponse<AccountVm> Update([FromBody] UpdateAccountRequest updateAccountRequest)
     {
-        var accountModel = _mapper.Map<UpdateAccountRequest, AccountModel>(updateAccountRequest);
+        var accountModel = _accountService.Get(updateAccountRequest.Id);
+        if (accountModel is null)
+        {
+            throw new BuddyException(AccountResource.AccountNotFound);
+        }
+        
+        _mapper.Map(updateAccountRequest, accountModel);
+        
         accountModel = _accountService.Update(accountModel);
         return new BuddyResponse<AccountVm>(_mapper.Map<AccountModel, AccountVm>(accountModel));
     }

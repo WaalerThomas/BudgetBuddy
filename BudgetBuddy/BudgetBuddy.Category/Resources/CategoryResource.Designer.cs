@@ -87,6 +87,15 @@ namespace BudgetBuddy.Category.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CategoryNotFound.
+        /// </summary>
+        public static string CategoryNotFound {
+            get {
+                return ResourceManager.GetString("CategoryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Group id is missing.
         /// </summary>
         public static string GroupIdIsMissing {

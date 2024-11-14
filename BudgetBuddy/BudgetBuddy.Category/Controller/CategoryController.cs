@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BudgetBuddy.Category.Request;
+using BudgetBuddy.Category.Resources;
 using BudgetBuddy.Category.Service;
 using BudgetBuddy.Category.ViewModel;
 using BudgetBuddy.Contracts.Interface.Category;
@@ -75,12 +76,12 @@ public class CategoryController
         var categoryModel = _categoryService.Get(updateCategoryRequest.Id);
         if (categoryModel is null)
         {
-            throw new BuddyException("Category not found");
+            throw new BuddyException(CategoryResource.CategoryNotFound);
         }
         
         _mapper.Map(updateCategoryRequest, categoryModel);
         
         categoryModel = _categoryService.Update(categoryModel);
-        return new BuddyResponse<CategoryVm>(_mapper.Map<CategoryModel, CategoryVm>(categoryModel));
+        return new BuddyResponse<CategoryVm>(_mapper.Map<CategoryVm>(categoryModel));
     }
 }
