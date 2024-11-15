@@ -60,6 +60,33 @@ namespace BudgetBuddy.Transaction.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account transfer transactions must have a positive amount.
+        /// </summary>
+        public static string AccountTransferTransactionNeedPositiveAmount {
+            get {
+                return ResourceManager.GetString("AccountTransferTransactionNeedPositiveAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Balance adjustment transactions must have a non-zero amount.
+        /// </summary>
+        public static string BalanceAdjustmentTransactionNeedNonZeroAmount {
+            get {
+                return ResourceManager.GetString("BalanceAdjustmentTransactionNeedNonZeroAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Category transactions must have a negative amount.
+        /// </summary>
+        public static string CategoryTransactionNeedNegativeAmount {
+            get {
+                return ResourceManager.GetString("CategoryTransactionNeedNegativeAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is not allowed for {1}.
         /// </summary>
         public static string FieldIsNotAllowedForType {
@@ -78,6 +105,15 @@ namespace BudgetBuddy.Transaction.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Transaction status is required.
+        /// </summary>
+        public static string StatusIsRequired {
+            get {
+                return ResourceManager.GetString("StatusIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Transaction not found.
         /// </summary>
         public static string TransactionNotFound {
@@ -92,6 +128,15 @@ namespace BudgetBuddy.Transaction.Resources {
         public static string TypeCannotChange {
             get {
                 return ResourceManager.GetString("TypeCannotChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transaction type is required.
+        /// </summary>
+        public static string TypeIsRequired {
+            get {
+                return ResourceManager.GetString("TypeIsRequired", resourceCulture);
             }
         }
     }

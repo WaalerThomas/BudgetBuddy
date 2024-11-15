@@ -10,8 +10,9 @@ public class TransactionValidator : AbstractValidator<TransactionModel>, ITransa
 {
     public TransactionValidator()
     {
-        RuleFor(x => x.Type).IsInEnum();
-        RuleFor(x => x.Status).IsInEnum();
+        RuleFor(x => x.Type).IsInEnum().WithMessage(TransactionResource.TypeIsRequired);
+        RuleFor(x => x.Status).IsInEnum().WithMessage(TransactionResource.StatusIsRequired);
+        RuleFor(x => x.Memo).MaximumLength(255);
     }
 
     public void ValidateTransaction(TransactionModel transactionModel)
@@ -30,6 +31,7 @@ public class TransactionValidator : AbstractValidator<TransactionModel>, ITransa
                 ValidateBalanceAdjustmentTransaction(transactionModel);
                 break;
             default:
+                // Should never get here because of the validation rule
                 throw new ArgumentOutOfRangeException();
         }
     }
@@ -58,7 +60,7 @@ public class TransactionValidator : AbstractValidator<TransactionModel>, ITransa
 
         if (transactionModel.Amount >= 0)
         {
-            throw new BuddyException("Category transactions must have a negative amount");
+            throw new BuddyException(TransactionResource.CategoryTransactionNeedNegativeAmount);
         }
     }
     
@@ -86,7 +88,7 @@ public class TransactionValidator : AbstractValidator<TransactionModel>, ITransa
         
         if (transactionModel.Amount <= 0)
         {
-            throw new BuddyException("Account transfer transactions must have a positive amount");
+            throw new BuddyException(TransactionResource.AccountTransferTransactionNeedPositiveAmount);
         }
     }
     
@@ -114,7 +116,7 @@ public class TransactionValidator : AbstractValidator<TransactionModel>, ITransa
 
         if (transactionModel.Amount == 0)
         {
-            throw new BuddyException("Balance adjustment transactions must have a non-zero amount");
+            throw new BuddyException(TransactionResource.BalanceAdjustmentTransactionNeedNonZeroAmount);
         }
     }
 }

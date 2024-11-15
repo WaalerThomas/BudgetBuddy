@@ -30,4 +30,19 @@
     <data name="TypeCannotChange" xml:space="preserve">
         <value>Transaction type can not be changed</value>
     </data>
+    <data name="TypeIsRequired" xml:space="preserve">
+        <value>Transaction type is required</value>
+    </data>
+    <data name="StatusIsRequired" xml:space="preserve">
+        <value>Transaction status is required</value>
+    </data>
+    <data name="CategoryTransactionNeedNegativeAmount" xml:space="preserve">
+        <value>Category transactions must have a negative amount</value>
+    </data>
+    <data name="AccountTransferTransactionNeedPositiveAmount" xml:space="preserve">
+        <value>Account transfer transactions must have a positive amount</value>
+    </data>
+    <data name="BalanceAdjustmentTransactionNeedNonZeroAmount" xml:space="preserve">
+        <value>Balance adjustment transactions must have a non-zero amount</value>
+    </data>
 </root>
