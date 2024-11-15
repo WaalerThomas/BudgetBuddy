@@ -17,6 +17,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BudgetBuddy.Account\BudgetBuddy.Account.csproj" />
+      <ProjectReference Include="..\BudgetBuddy.CategoryTransfer\BudgetBuddy.CategoryTransfer.csproj" />
       <ProjectReference Include="..\BudgetBuddy.Category\BudgetBuddy.Category.csproj" />
       <ProjectReference Include="..\BudgetBuddy.Client\BudgetBuddy.Client.csproj" />
       <ProjectReference Include="..\BudgetBuddy.Transaction\BudgetBuddy.Transaction.csproj" />

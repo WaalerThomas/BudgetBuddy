@@ -161,6 +161,38 @@ namespace BudgetBuddy.Data.Migrations
 
                     b.ToTable("Transactions");
                 });
+
+            modelBuilder.Entity("CategoryTransfer.Model.CategoryTransferDao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("FromAvailableToBudget")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("FromCategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ToCategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CategoryTransfers");
+                });
 #pragma warning restore 612, 618
         }
     }

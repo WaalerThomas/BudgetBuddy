@@ -2,6 +2,7 @@
 using BudgetBuddy.Category.Model;
 using BudgetBuddy.Client.Model;
 using BudgetBuddy.Transaction.Model;
+using CategoryTransfer.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Data;
@@ -12,6 +13,7 @@ public class DatabaseContext : DbContext
     public DbSet<AccountDao> Accounts { get; set; }
     public DbSet<CategoryDao> Categories { get; set; }
     public DbSet<TransactionDao> Transactions { get; set; }
+    public DbSet<CategoryTransferDao> CategoryTransfers { get; set; }
 
     private string DbPath { get; }
 

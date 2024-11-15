@@ -9,6 +9,7 @@ using BudgetBuddy.Contracts.Interface.Common;
 using BudgetBuddy.Core.Operation;
 using BudgetBuddy.Data;
 using BudgetBuddy.Transaction;
+using CategoryTransfer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Protocols.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -58,7 +59,8 @@ var builder = WebApplication.CreateBuilder(args);
         .AddAccount()
         .AddClient()
         .AddTransaction()
-        .AddCategory();
+        .AddCategory()
+        .AddCategoryTransfer();
 
     builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
