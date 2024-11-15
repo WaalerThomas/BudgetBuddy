@@ -27,6 +27,7 @@ public class CreateCategoryTransferOperation : Operation<CategoryTransferModel, 
     protected override CategoryTransferModel OnOperate(CategoryTransferModel categoryTransferModel)
     {
         _categoryTransferValidator.ValidateAndThrow(categoryTransferModel);
+        _categoryTransferValidator.ValidateTransfer(categoryTransferModel);
         
         var categoryTransferDao = _mapper.Map<CategoryTransferDao>(categoryTransferModel);
         categoryTransferDao = _categoryTransferRepository.Create(categoryTransferDao);

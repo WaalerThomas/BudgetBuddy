@@ -4,6 +4,7 @@ namespace BudgetBuddy.Contracts.Model.CategoryTransfer;
 
 public class CategoryTransferModel : TimeKeepModel
 {
+    public Guid ClientId { get; set; }
     public DateOnly Date { get; set; }
     public decimal Amount { get; set; }
     public int? FromCategoryId { get; set; }

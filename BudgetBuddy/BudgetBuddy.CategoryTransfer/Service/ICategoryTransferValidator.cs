@@ -5,4 +5,5 @@ namespace CategoryTransfer.Service;
 
 public interface ICategoryTransferValidator : IValidator<CategoryTransferModel>
 {
+    void ValidateTransfer(CategoryTransferModel model);
 }
