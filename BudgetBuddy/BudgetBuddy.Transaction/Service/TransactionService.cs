@@ -44,4 +44,10 @@ public class TransactionService : ServiceBase, ITransactionService
         var operation = CreateOperation<GetBalanceOperation>();
         return operation.Operate(new GetBalanceRequest { Id = id, OnlyActualBalance = onlyActualBalance });;
     }
+
+    public decimal GetFlowSum()
+    {
+        var operation = CreateOperation<GetFlowSumOperation>();
+        return operation.Operate();
+    }
 }

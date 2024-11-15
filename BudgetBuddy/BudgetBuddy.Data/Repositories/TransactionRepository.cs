@@ -65,6 +65,16 @@ public class TransactionRepository : Repository<TransactionDao>, ITransactionRep
         throw new NotImplementedException();
     }
 
+    public decimal GetFlowSum()
+    {
+        return Context.Transactions
+            .AsNoTracking()
+            .Where(x => x.ClientId == _currentUser.ClientId && x.Type == TransactionType.BalanceAdjustment)
+            .Select(x => x.Amount)
+            .ToList()
+            .Sum();
+    }
+
     public AccountBalanceModel GetBalance(int accountId, bool onlyActualBalance)
     {
         if (onlyActualBalance)

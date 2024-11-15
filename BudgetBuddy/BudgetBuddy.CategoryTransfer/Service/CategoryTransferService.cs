@@ -12,6 +12,12 @@ public class CategoryTransferService : ServiceBase, ICategoryTransferService
     {
     }
 
+    public decimal GetAvailableToBudget()
+    {
+        var operation = CreateOperation<GetAvailableToBudgetOperation>();
+        return operation.Operate();
+    }
+
     public CategoryTransferModel Create(CategoryTransferModel categoryTransferModel)
     {
         var operation = CreateOperation<CreateCategoryTransferOperation>();

@@ -1,6 +1,7 @@
 ﻿using BudgetBuddy.Common.Service;
 using CategoryTransfer.Model;
 using CategoryTransfer.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Data.Repositories;
 
@@ -12,7 +13,14 @@ public class CategoryTransferRepository : Repository<CategoryTransferDao>, ICate
 
     public CategoryTransferDao Create(CategoryTransferDao model)
     {
-        throw new NotImplementedException();
+        model.CreatedAt = DateTime.UtcNow;
+        model.ClientId = _currentUser.ClientId;
+
+        var result = Context.CategoryTransfers.Add(model);
+
+        Context.SaveChanges();
+
+        return result.Entity;
     }
 
     public Task<CategoryTransferDao> CreateAsync(CategoryTransferDao model)
@@ -43,5 +51,15 @@ public class CategoryTransferRepository : Repository<CategoryTransferDao>, ICate
     public IEnumerable<CategoryTransferDao> GetByIds(IEnumerable<int> ids)
     {
         throw new NotImplementedException();
+    }
+
+    public decimal GetFlowSum()
+    {
+        return Context.CategoryTransfers
+            .AsNoTracking()
+            .Where(x => x.ClientId == _currentUser.ClientId)
+            .Select(x => x.Amount)
+            .ToList()
+            .Sum();
     }
 }

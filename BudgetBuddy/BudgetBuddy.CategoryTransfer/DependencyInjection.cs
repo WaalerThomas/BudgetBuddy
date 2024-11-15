@@ -23,5 +23,6 @@ public static class DependencyInjection
     private static void AddOperations(this IServiceCollection services)
     {
         services.AddScoped<CreateCategoryTransferOperation>();
+        services.AddScoped<GetAvailableToBudgetOperation>();
     }
 }

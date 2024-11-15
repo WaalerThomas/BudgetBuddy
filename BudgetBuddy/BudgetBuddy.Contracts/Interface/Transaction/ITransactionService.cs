@@ -11,4 +11,5 @@ public interface ITransactionService
     TransactionModel Update(TransactionModel transactionModel);
     
     AccountBalanceModel GetBalance(int id, bool onlyActualBalance = false);
+    decimal GetFlowSum();
 }

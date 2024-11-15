@@ -6,5 +6,6 @@ namespace BudgetBuddy.Transaction.Repositories;
 
 public interface ITransactionRepository : IBuddyRepository<TransactionDao>
 {
+    decimal GetFlowSum();
     AccountBalanceModel GetBalance(int accountId, bool onlyActualBalance);
 }
