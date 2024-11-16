@@ -14,11 +14,11 @@ public class CategoryTransferValidator : AbstractValidator<CategoryTransferModel
         _categoryService = categoryService;
         
         RuleFor(x => x.FromCategoryId)
-            .Null().WithMessage("From category id not needed when transferring from available to budget")
+            .Null().WithMessage(CategoryTransferResource.FromCategoryIdNotNeeded)
             .When(x => x.FromAvailableToBudget);
         
         RuleFor(x => x.Amount)
-            .GreaterThan(0).WithMessage("Amount must be greater than 0");
+            .GreaterThan(0).WithMessage(CategoryTransferResource.AmountGreaterThanZero);
     }
     
     public void ValidateTransfer(CategoryTransferModel model)
@@ -36,7 +36,7 @@ public class CategoryTransferValidator : AbstractValidator<CategoryTransferModel
 
         if (toCategory.IsGroup)
         {
-            throw new ValidationException("Cannot transfer to a group category");
+            throw new ValidationException(CategoryTransferResource.CanNotTransferToGroup);
         }
 
         if (!model.FromCategoryId.HasValue)
@@ -52,7 +52,7 @@ public class CategoryTransferValidator : AbstractValidator<CategoryTransferModel
         
         if (fromCategory.IsGroup)
         {
-            throw new ValidationException("Cannot transfer from a group category");
+            throw new ValidationException(CategoryTransferResource.CanNotTransferFromGroup);
         }
     }
 }

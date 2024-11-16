@@ -60,6 +60,42 @@ namespace CategoryTransfer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Amount must be greater than 0.
+        /// </summary>
+        public static string AmountGreaterThanZero {
+            get {
+                return ResourceManager.GetString("AmountGreaterThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can not transfer from a group category.
+        /// </summary>
+        public static string CanNotTransferFromGroup {
+            get {
+                return ResourceManager.GetString("CanNotTransferFromGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can not transfer to a group category.
+        /// </summary>
+        public static string CanNotTransferToGroup {
+            get {
+                return ResourceManager.GetString("CanNotTransferToGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From category id not needed when transferring from available to budget.
+        /// </summary>
+        public static string FromCategoryIdNotNeeded {
+            get {
+                return ResourceManager.GetString("FromCategoryIdNotNeeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to From category not found.
         /// </summary>
         public static string FromCategoryNotFound {

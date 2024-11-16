@@ -27,4 +27,16 @@
     <data name="SameCategory" xml:space="preserve">
         <value>Can not transfer from itself</value>
     </data>
+    <data name="FromCategoryIdNotNeeded" xml:space="preserve">
+        <value>From category id not needed when transferring from available to budget</value>
+    </data>
+    <data name="AmountGreaterThanZero" xml:space="preserve">
+        <value>Amount must be greater than 0</value>
+    </data>
+    <data name="CanNotTransferToGroup" xml:space="preserve">
+        <value>Can not transfer to a group category</value>
+    </data>
+    <data name="CanNotTransferFromGroup" xml:space="preserve">
+        <value>Can not transfer from a group category</value>
+    </data>
 </root>
