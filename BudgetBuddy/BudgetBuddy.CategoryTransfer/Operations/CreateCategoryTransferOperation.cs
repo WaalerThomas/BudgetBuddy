@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BudgetBuddy.Contracts.Model.CategoryTransfer;
+using BudgetBuddy.Core.Extensions;
 using BudgetBuddy.Core.Operation;
 using CategoryTransfer.Model;
 using CategoryTransfer.Repositories;
@@ -26,7 +27,7 @@ public class CreateCategoryTransferOperation : Operation<CategoryTransferModel, 
 
     protected override CategoryTransferModel OnOperate(CategoryTransferModel categoryTransferModel)
     {
-        _categoryTransferValidator.ValidateAndThrow(categoryTransferModel);
+        _categoryTransferValidator.ValidateAndThrowException(categoryTransferModel);
         _categoryTransferValidator.ValidateTransfer(categoryTransferModel);
         
         var categoryTransferDao = _mapper.Map<CategoryTransferDao>(categoryTransferModel);
