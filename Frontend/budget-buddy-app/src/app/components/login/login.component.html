@@ -1,0 +1,26 @@
+<p-dialog
+    header="Login"
+    [modal]="true"
+    [(visible)]="visible"
+    [style]="{ width: '25rem' }"
+    [draggable]="false"
+    [closable]="false"
+>
+    <form [formGroup]="loginForm">
+        <label for="username" class="block mb-2">Username</label>
+        <input pInputText id="username" type="text" formControlName="username" class="w-full mb-3" />
+
+        <label for="password" class="block mb-2">Password</label>
+        <input pInputText id="password" type="password" formControlName="password" class="w-full mb-3" />
+
+        <div class="flex align-items-center justify-content-between mb-6">
+            <div class="flex align-items-center">
+                <p-checkbox id="rememberme1" [binary]="true" styleClass="mr-2"></p-checkbox>
+                <label for="rememberme1" class="text-900">Remember me</label>
+            </div>
+            <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
+        </div>
+
+        <button pButton pRipple label="Sign In" icon="pi pi-user" class="w-full" (onClick)="visible = false"></button>
+    </form>
+</p-dialog>
