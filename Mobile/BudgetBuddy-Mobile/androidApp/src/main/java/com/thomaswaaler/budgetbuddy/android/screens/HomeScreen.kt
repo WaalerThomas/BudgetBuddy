@@ -40,6 +40,7 @@ fun HomeScreen()
                 Icon(painter = painterResource(id = R.drawable.clock_loader_40_24dp), contentDescription = null, tint = Color.hsl(63F, 1F, .50F))
                 Icon(painter = painterResource(id = R.drawable.clock_loader_10_24dp), contentDescription = null, tint = Color.hsl(37F, .87F, .54F))
                 Icon(painter = painterResource(id = R.drawable.circle_24dp_outlined), contentDescription = null, tint = Color.Red)
+                Icon(painter = painterResource(id = R.drawable.error_24dp), contentDescription = null, tint = Color.Red)
             }
 
             Icon(painter = painterResource(id = R.drawable.currency_exchange_24dp), contentDescription = null)
