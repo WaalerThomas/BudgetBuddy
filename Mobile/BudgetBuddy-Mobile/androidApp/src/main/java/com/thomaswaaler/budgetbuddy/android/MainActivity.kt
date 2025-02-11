@@ -19,12 +19,18 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.thomaswaaler.budgetbuddy.android.modules.BudgetBAppBar
 import com.thomaswaaler.budgetbuddy.android.modules.NavBar
+import com.thomaswaaler.budgetbuddy.android.screens.HomeScreen
 
-enum class NavBarScreens() {
+enum class NavBarScreens {
     Home,
     Transfer,
     Transactions,
     Config,
+}
+
+enum class AppScreens() {
+    Main,
+    Settings
 }
 
 class MainActivity : ComponentActivity() {
@@ -56,15 +62,9 @@ fun MainApp()
                 BudgetBAppBar(
                     title = topBarTitle,
                     canNavigateBack = showBackButton,
-                    isSettings = navController.currentDestination?.route != "settings",
-                    onSettingsClicked = { navController.navigate("settings") },
-                    onBackClicked = {
-                        if (navController.popBackStack()) {
-                            Log.d("POPPER", "Popped back on the stack")
-                        } else {
-                            Log.d("POPPER", "Failed popping back on the stack")
-                        }
-                    }
+                    isSettings = navController.currentDestination?.route != AppScreens.Settings.name,
+                    onSettingsClicked = { navController.navigate(AppScreens.Settings.name) },
+                    onBackClicked = { navController.popBackStack() }
                 )
             }
         },
@@ -85,48 +85,67 @@ fun MainApp()
     ) {innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "main",
+            startDestination = AppScreens.Main.name,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding))
         {
-            composable(
-                route = "settings"
-            ) {
+            composable(route = AppScreens.Settings.name) {
                 showNavBar = false
                 showTopBar = true
                 showBackButton = true
                 topBarTitle = "Settings"
 
                 // SettingsScreen()
+                Text(text = "Nothing here, settings empty")
             }
 
             navigation(
                 startDestination = NavBarScreens.Home.name,
-                route = "home"
+                route = AppScreens.Main.name
             ) {
-                showNavBar = true
-                showTopBar = true
-                showBackButton = false
-
                 composable(route = NavBarScreens.Home.name) {
                     currentNavBarScreen = NavBarScreens.Home
                     topBarTitle = "Dashboard"
+
+                    showNavBar = true
+                    showTopBar = true
+                    showBackButton = false
+
+                    HomeScreen()
                 }
 
                 composable(route = NavBarScreens.Transfer.name) {
                     currentNavBarScreen = NavBarScreens.Transfer
                     topBarTitle = "Transfer"
+
+                    showNavBar = true
+                    showTopBar = true
+                    showBackButton = false
+
+                    Text(text = "Transfer page")
                 }
 
                 composable(route = NavBarScreens.Transactions.name) {
                     currentNavBarScreen = NavBarScreens.Transactions
                     topBarTitle = "Transactions"
+
+                    showNavBar = true
+                    showTopBar = true
+                    showBackButton = false
+
+                    Text(text = "Transactions page")
                 }
 
                 composable(route = NavBarScreens.Config.name) {
                     currentNavBarScreen = NavBarScreens.Config
                     topBarTitle = "Config"
+
+                    showNavBar = true
+                    showTopBar = true
+                    showBackButton = false
+
+                    Text(text = "Config page")
                 }
             }
         }

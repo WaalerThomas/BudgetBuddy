@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.thomaswaaler.budgetbuddy.android.MainApp
 import com.thomaswaaler.budgetbuddy.android.R
 
 @Composable
@@ -21,7 +23,8 @@ fun HomeScreen()
     Surface(
         modifier = Modifier
             .fillMaxSize(),
-        color = MaterialTheme.colorScheme.tertiaryContainer
+        color = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -41,6 +44,8 @@ fun HomeScreen()
 
             Icon(painter = painterResource(id = R.drawable.currency_exchange_24dp), contentDescription = null)
             Icon(painter = painterResource(id = R.drawable.list_alt_24dp), contentDescription = null)
+            Icon(painter = painterResource(id = R.drawable.sync_alt_24dp), contentDescription = null)
+            Icon(painter = painterResource(id = R.drawable.graph_2_24dp), contentDescription = null)
 
             Row {
                 Icon(painter = painterResource(id = R.drawable.trending_down_24dp), contentDescription = null, tint = Color.Red)
@@ -49,4 +54,10 @@ fun HomeScreen()
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun PreviewModule() {
+    MainApp()
 }
