@@ -2,17 +2,11 @@ package com.thomaswaaler.budgetbuddy.android.modules
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
-import com.thomaswaaler.budgetbuddy.android.NavBarScreens
-import com.thomaswaaler.budgetbuddy.android.R
+import com.thomaswaaler.NavBarScreens
 
+/*
 @Composable
 fun NavBar(
     currentScreens: NavBarScreens,
@@ -46,3 +40,4 @@ private fun PreviewNavBar()
 {
     NavBar(currentScreens = NavBarScreens.Home) {}
 }
+ */
