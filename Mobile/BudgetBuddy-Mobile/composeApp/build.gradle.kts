@@ -35,7 +35,6 @@ kotlin {
             implementation(libs.decompose)
         }
         commonMain.dependencies {
-            /*
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
@@ -44,17 +43,13 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(libs.decompose)
-            implementation(libs.extensions.compose.jetbrains)
-            implementation(libs.kotlinx.serialization.json)
-            */
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
             implementation(compose.components.resources)
             implementation(libs.decompose)
             implementation(libs.decompose.extensions.compose)
             implementation(libs.kotlinx.serialization.json)
+            implementation(compose.material3)
         }
     }
 }
@@ -87,6 +82,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.ui.android)
     debugImplementation(compose.uiTooling)
 }
 

@@ -4,7 +4,9 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.popToFirst
 import com.arkivanov.decompose.router.stack.pushNew
+import com.thomaswaaler.modules.NavBarScreens
 import kotlinx.serialization.Serializable
 
 class RootComponent(
@@ -38,6 +40,18 @@ class RootComponent(
                     navigation.pop()
                 }
             ))
+        }
+    }
+
+    fun navigateNavBar(index: NavBarScreens)
+    {
+        if (index == NavBarScreens.Home)
+        {
+            navigation.popToFirst()
+        }
+        else
+        {
+            navigation.pushNew(Configuration.ScreenB(index.name))
         }
     }
 

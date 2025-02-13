@@ -2,39 +2,68 @@ package com.thomaswaaler
 
 // NOTE: Using https://www.youtube.com/watch?v=g4XSWQ7QT8g
 
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.thomaswaaler.modules.NavBar
+import com.thomaswaaler.modules.BudgetBAppBar
+import com.thomaswaaler.modules.NavBarScreens
 import com.thomaswaaler.navigation.RootComponent
 import com.thomaswaaler.screens.ScreenA
 import com.thomaswaaler.screens.ScreenB
-
-enum class NavBarScreens {
-    Home,
-    Transfer,
-    Transactions,
-    Config,
-}
-
-enum class AppScreens() {
-    Main,
-    Settings
-}
 
 @Composable
 fun App(root: RootComponent) {
     MaterialTheme {
         val childStack by root.childStack.subscribeAsState()
-        Children(
-            stack = childStack,
-            animation = stackAnimation(slide())
-        ) { child ->
-            when (val instance = child.instance) {
-                is RootComponent.Child.ScreenA -> ScreenA(instance.component)
-                is RootComponent.Child.ScreenB -> ScreenB(instance.component)
+
+        var showNavBar by remember { mutableStateOf(true) }
+        var showTopBar by remember { mutableStateOf(true) }
+        var showBackButton by remember { mutableStateOf(false) }
+        var topBarTitle by remember { mutableStateOf("Budget Buddy") }
+
+        var currentNavIndex by remember { mutableStateOf(NavBarScreens.Home) }
+
+        Scaffold(
+            topBar = {
+                if (showTopBar) {
+                    BudgetBAppBar(
+                        title = topBarTitle,
+                        canNavigateBack = showBackButton,
+                        isSettings = false/*navController.currentDestination?.route != AppScreens.Settings.name*/,
+                        onSettingsClicked = { /* navController.navigate(AppScreens.Settings.name) */ },
+                        onBackClicked = { /* navController.popBackStack() */ }
+                    )
+                }
+            },
+            bottomBar = {
+                if (showNavBar) {
+                    NavBar(
+                        selectedIndex = currentNavIndex,
+                        onSelectionChanged = {
+                            currentNavIndex = it
+                            root.navigateNavBar(it)
+                        }
+                    )
+                }
+            }
+        ) { innerPadding ->
+            Children(
+                stack = childStack,
+                animation = stackAnimation(slide()),
+                modifier = Modifier
+                    .padding(innerPadding)
+            ) { child ->
+                when (val instance = child.instance) {
+                    is RootComponent.Child.ScreenA -> ScreenA(instance.component)
+                    is RootComponent.Child.ScreenB -> ScreenB(instance.component)
+                }
             }
         }
     }
