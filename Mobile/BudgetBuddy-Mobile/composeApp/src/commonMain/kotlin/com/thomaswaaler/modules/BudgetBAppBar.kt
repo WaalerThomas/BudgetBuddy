@@ -1,7 +1,7 @@
 package com.thomaswaaler.modules
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,7 +32,7 @@ fun BudgetBAppBar(
             titleContentColor = MaterialTheme.colorScheme.onPrimary
         ),
         actions = {
-            if (isSettings) {
+            if (!isSettings) {
                 IconButton(
                     onClick = { onSettingsClicked() },
                     colors = IconButtonDefaults.iconButtonColors(
@@ -52,7 +52,7 @@ fun BudgetBAppBar(
                     )
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "back"
                     )
                 }

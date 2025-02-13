@@ -1,4 +1,4 @@
-package com.thomaswaaler.navigation
+package com.thomaswaaler.events
 
 sealed interface ScreenAEvent {
     data object ClickButtonA: ScreenAEvent

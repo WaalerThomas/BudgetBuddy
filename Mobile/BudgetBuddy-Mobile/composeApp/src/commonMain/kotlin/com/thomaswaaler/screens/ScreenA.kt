@@ -15,11 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.thomaswaaler.navigation.ScreenAComponent
-import com.thomaswaaler.navigation.ScreenAEvent
+import com.thomaswaaler.events.ScreenAEvent
 
 @Composable
 fun ScreenA(component: ScreenAComponent) {
     val text by component.text.subscribeAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
