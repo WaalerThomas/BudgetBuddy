@@ -29,6 +29,7 @@ fun App(root: RootComponent) {
         val childStack by root.childStack.subscribeAsState()
 
         var showBottomSheet by remember { mutableStateOf(false) }
+        var showFAB by remember { mutableStateOf(true) }
         var showNavBar by remember { mutableStateOf(true) }
         var showTopBar by remember { mutableStateOf(true) }
         var showBackButton by remember { mutableStateOf(false) }
@@ -41,12 +42,14 @@ fun App(root: RootComponent) {
             showNavBar = false
             showTopBar = true
             showBackButton = true
+            showFAB = false
         }
 
         fun setNavScreenVariables() {
             showNavBar = true
             showTopBar = true
             showBackButton = false
+            showFAB = true
         }
 
         Scaffold(
@@ -72,8 +75,10 @@ fun App(root: RootComponent) {
                 }
             },
             floatingActionButton = {
-                FloatingActionButton(onClick = { showBottomSheet = true }) {
-                    Icon(Icons.Filled.Add, contentDescription = "")
+                if (showFAB) {
+                    FloatingActionButton(onClick = { showBottomSheet = true }) {
+                        Icon(Icons.Filled.Add, contentDescription = "")
+                    }
                 }
             }
         ) { innerPadding ->

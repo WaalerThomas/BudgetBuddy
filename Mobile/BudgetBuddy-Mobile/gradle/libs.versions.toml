@@ -8,6 +8,7 @@ androidx-lifecycle = "2.8.4"
 decomposeExtensionsCompose = "3.2.2"
 kotlin = "2.1.10"
 decompose = "3.2.2"
+kotlinxDatetime = "0.6.2"
 kotlinxSerializationJson = "1.6.3"
 compose-plugin = "1.7.3"
 uiAndroid = "1.7.8"
@@ -15,6 +16,7 @@ uiAndroid = "1.7.8"
 [libraries]
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 decompose-extensions-compose = { module = "com.arkivanov.decompose:extensions-compose", version.ref = "decomposeExtensionsCompose" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }

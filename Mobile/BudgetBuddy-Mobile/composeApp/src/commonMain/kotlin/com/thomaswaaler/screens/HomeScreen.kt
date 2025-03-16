@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -38,7 +39,8 @@ fun HomeScreen(
 ) {
     Surface(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(8.dp),
         color = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface
     ) {
@@ -51,19 +53,17 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Icon(vectorResource(Res.drawable.circle_24dp_filled), contentDescription = null, tint = Color.Green)
-                Icon(vectorResource(Res.drawable.clock_loader_80_24dp), contentDescription = null, tint = Color.Green)
-                Icon(vectorResource(Res.drawable.clock_loader_60_24dp), contentDescription = null, tint = Color.hsl(63F, .93F, .70F))
-                Icon(vectorResource(Res.drawable.clock_loader_40_24dp), contentDescription = null, tint = Color.hsl(63F, 1F, .50F))
+                Icon(vectorResource(Res.drawable.circle_24dp_filled), contentDescription = null, tint = Color.hsl(114F, .71F, .41F))
+                Icon(vectorResource(Res.drawable.clock_loader_80_24dp), contentDescription = null, tint = Color.hsl(114F, .87F, .54F))
+                Icon(vectorResource(Res.drawable.clock_loader_60_24dp), contentDescription = null, tint = Color.hsl(58F, .71F, .46F))
+                Icon(vectorResource(Res.drawable.clock_loader_40_24dp), contentDescription = null, tint = Color.hsl(63F, .87F, .54F))
                 Icon(vectorResource(Res.drawable.clock_loader_10_24dp), contentDescription = null, tint = Color.hsl(37F, .87F, .54F))
-                Icon(vectorResource(Res.drawable.circle_24dp_outlined), contentDescription = null, tint = Color.Red)
-                Icon(vectorResource(Res.drawable.error_24dp), contentDescription = null, tint = Color.Red)
+                Icon(vectorResource(Res.drawable.circle_24dp_outlined), contentDescription = null, tint = MaterialTheme.colorScheme.error)
+                Icon(vectorResource(Res.drawable.error_24dp), contentDescription = null, tint = MaterialTheme.colorScheme.error)
             }
 
             Icon(vectorResource(Res.drawable.currency_exchange_24dp), contentDescription = null)
             Icon(vectorResource(Res.drawable.list_alt_24dp), contentDescription = null)
-            Icon(vectorResource(Res.drawable.sync_alt_24dp), contentDescription = null)
-            Icon(vectorResource(Res.drawable.graph_2_24dp), contentDescription = null)
 
             Row {
                 Icon(vectorResource(Res.drawable.trending_down_24dp), contentDescription = null, tint = Color.Red)

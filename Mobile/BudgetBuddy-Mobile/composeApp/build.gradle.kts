@@ -46,6 +46,7 @@ kotlin {
             implementation(libs.decompose.extensions.compose)
             implementation(libs.kotlinx.serialization.json)
             implementation(compose.material3)
+            implementation(libs.kotlinx.datetime)
         }
     }
 }
