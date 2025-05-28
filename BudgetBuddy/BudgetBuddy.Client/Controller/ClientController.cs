@@ -1,15 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using AutoMapper;
+﻿using AutoMapper;
 using BudgetBuddy.Client.Request;
-using BudgetBuddy.Client.Service;
 using BudgetBuddy.Client.ViewModel;
 using BudgetBuddy.Contracts.Interface.Client;
 using BudgetBuddy.Contracts.Model.Client;
 using BudgetBuddy.Contracts.Model.Common;
 using BudgetBuddy.Core.Exceptions;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -61,12 +58,11 @@ public class ClientController
     [HttpPost("login")]
     [EndpointSummary("Login")]
     [EndpointDescription("Login to the application")]
-    public BuddyResponse<string> Login(LoginClientRequest loginClientRequest)
+    public BuddyResponse<AuthenticationInfoVm> Login(LoginClientRequest loginClientRequest)
     {
         var loginClient = _mapper.Map<LoginClientRequest, ClientModel>(loginClientRequest);
         var authenticationTokens = _clientService.Login(loginClient);
         
-        // TODO: Add token to the response header instead of the body as cookie
         var httpContext = _httpContextAccessor.HttpContext;
         if (httpContext is null)
         {
@@ -89,7 +85,15 @@ public class ClientController
                 Expires = (DateTimeOffset)authenticationTokens.RefreshExpiresIn
             });
         
-        return new BuddyResponse<AuthenticationInfoVm>(_mapper.Map<AuthenticationInfoVm>(authenticationTokens));
+        var authenticationInfoVm = new AuthenticationInfoVm
+        {
+            AccessToken = token,
+            RefreshToken = "",
+            ExpiresIn = DateTime.Now.AddMinutes(30),
+            Client = _mapper.Map<ClientVm>(loginClient)
+        };
+        
+        return new BuddyResponse<AuthenticationInfoVm>(authenticationInfoVm);
     }
     
     [HttpPost("logout")]
@@ -97,6 +101,26 @@ public class ClientController
     [EndpointDescription("Logout from the application")]
     public BuddyResponse<bool> Logout()
     {
-        throw new NotImplementedException();
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext is null)
+        {
+            throw new BuddyException("HttpContext is null");
+        }
+        
+        httpContext.Response.Cookies.Delete("prrrKeKeKedip");
+        httpContext.Response.Cookies.Delete("prrrKeKeKedipRefresh");
+        
+        return new BuddyResponse<bool>(true);
+    }
+    
+    [Authorize]
+    [HttpGet("me")]
+    [EndpointSummary("Get current client")]
+    [EndpointDescription("Get the current client")]
+    public BuddyResponse<ClientVm> GetMe()
+    {
+        // var client = _clientService.GetMe();
+        // return new BuddyResponse<ClientVm>(_mapper.Map<ClientModel, ClientVm>(client));
+        return new BuddyResponse<ClientVm>();
     }
 }

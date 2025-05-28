@@ -1,7 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using BudgetBuddy.Client.Service;
+using BudgetBuddy.Client.ViewModel;
 using BudgetBuddy.Common.Service;
 using BudgetBuddy.Contracts.Interface.Client;
 using BudgetBuddy.Contracts.Model.Client;
@@ -20,17 +22,20 @@ public class LoginClientOperation : Operation<ClientModel, AuthenticationTokensR
     private readonly IClientValidator _clientValidator;
     private readonly IClientService _clientService;
     private readonly IPasswordService _passwordService;
+    private readonly IMapper _mapper;
 
     public LoginClientOperation(
         IClientValidator clientValidator,
         IBuddyConfiguration configuration,
         IClientService clientService,
-        IPasswordService passwordService)
+        IPasswordService passwordService,
+        IMapper mapper)
     {
         _clientValidator = clientValidator;
         _configuration = configuration;
         _clientService = clientService;
         _passwordService = passwordService;
+        _mapper = mapper;
     }
 
     protected override AuthenticationTokensResponse OnOperate(ClientModel clientModel)
