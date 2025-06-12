@@ -64,7 +64,7 @@ public class ClientController
     public BuddyResponse<string> Login(LoginClientRequest loginClientRequest)
     {
         var loginClient = _mapper.Map<LoginClientRequest, ClientModel>(loginClientRequest);
-        var token = _clientService.Login(loginClient);
+        var authenticationTokens = _clientService.Login(loginClient);
         
         // TODO: Add token to the response header instead of the body as cookie
         var httpContext = _httpContextAccessor.HttpContext;
@@ -73,15 +73,23 @@ public class ClientController
             throw new BuddyException("HttpContext is null");
         }
         
-        httpContext.Response.Cookies.Append("prrrKeKeKedip", token, new CookieOptions
+        httpContext.Response.Cookies.Append("prrrKeKeKedip", authenticationTokens.AccessToken, new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.Now.AddMinutes(30)
+                Expires = (DateTimeOffset)authenticationTokens.ExpiresIn
+            });
+
+        httpContext.Response.Cookies.Append("prrrKeKeKedipRefresh", authenticationTokens.RefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = (DateTimeOffset)authenticationTokens.RefreshExpiresIn
             });
         
-        return new BuddyResponse<string>(token);
+        return new BuddyResponse<AuthenticationInfoVm>(_mapper.Map<AuthenticationInfoVm>(authenticationTokens));
     }
     
     [HttpPost("logout")]

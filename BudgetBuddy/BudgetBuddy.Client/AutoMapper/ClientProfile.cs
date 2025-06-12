@@ -3,6 +3,8 @@ using BudgetBuddy.Client.Model;
 using BudgetBuddy.Client.Request;
 using BudgetBuddy.Client.ViewModel;
 using BudgetBuddy.Contracts.Model.Client;
+using BudgetBuddy.Contracts.Response.Client;
+using Microsoft.AspNetCore.Authentication;
 
 namespace BudgetBuddy.Client.AutoMapper;
 
@@ -25,5 +27,7 @@ public class ClientProfile : Profile
             .ForMember(x => x.Id, p => p.Ignore())
             .ForMember(x => x.CreatedAt, p => p.Ignore())
             .ForMember(x => x.UpdatedAt, p => p.Ignore());
+
+        CreateMap<AuthenticationTokensResponse, AuthenticationInfoVm>();
     }
 }

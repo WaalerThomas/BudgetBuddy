@@ -1,6 +1,7 @@
 ﻿using BudgetBuddy.Client.Operations;
 using BudgetBuddy.Contracts.Interface.Client;
 using BudgetBuddy.Contracts.Model.Client;
+using BudgetBuddy.Contracts.Response.Client;
 using BudgetBuddy.Core.Operation;
 using BudgetBuddy.Core.Service;
 
@@ -23,7 +24,7 @@ public class ClientService : ServiceBase, IClientService
         return operation.Operate(username);
     }
 
-    public string Login(ClientModel client)
+    public AuthenticationTokensResponse Login(ClientModel client)
     {
         var operation = CreateOperation<LoginClientOperation>();
         return operation.Operate(client);

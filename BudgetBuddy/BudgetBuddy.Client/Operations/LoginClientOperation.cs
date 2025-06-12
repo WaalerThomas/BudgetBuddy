@@ -5,6 +5,7 @@ using BudgetBuddy.Client.Service;
 using BudgetBuddy.Common.Service;
 using BudgetBuddy.Contracts.Interface.Client;
 using BudgetBuddy.Contracts.Model.Client;
+using BudgetBuddy.Contracts.Response.Client;
 using BudgetBuddy.Core.Exceptions;
 using BudgetBuddy.Core.Operation;
 using FluentValidation;
@@ -13,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BudgetBuddy.Client.Operations;
 
-public class LoginClientOperation : Operation<ClientModel, string>
+public class LoginClientOperation : Operation<ClientModel, AuthenticationTokensResponse>
 {
     private readonly IBuddyConfiguration _configuration;
     private readonly IClientValidator _clientValidator;
@@ -32,15 +33,31 @@ public class LoginClientOperation : Operation<ClientModel, string>
         _passwordService = passwordService;
     }
 
-    protected override string OnOperate(ClientModel clientModel)
+    protected override AuthenticationTokensResponse OnOperate(ClientModel clientModel)
     {
         _clientValidator.ValidateAndThrow(clientModel);
         
         ValidateLogin(clientModel);
         
         var storedClient = _clientService.GetByUsername(clientModel.Username);
-        var token = CreateToken(storedClient!.Id.ToString(), storedClient.Username);
-        return token;
+        if (storedClient is null)
+        {
+            throw new BuddyException("Invalid username or password");
+        }
+        
+        var tokenExpiration = DateTime.Now.AddMinutes(30);
+        var refreshTokenExpiration = DateTime.Now.AddDays(7);
+        
+        var token = CreateToken(storedClient.Id.ToString(), storedClient.Username, tokenExpiration);
+        var refreshToken = CreateToken(storedClient.Id.ToString(), storedClient.Username, refreshTokenExpiration);
+
+        return new AuthenticationTokensResponse
+        (
+            token,
+            refreshToken,
+            tokenExpiration,
+            refreshTokenExpiration
+        );
     }
 
     private void ValidateLogin(ClientModel client)
@@ -74,7 +91,7 @@ public class LoginClientOperation : Operation<ClientModel, string>
         }
     }
 
-    private string CreateToken(string clientId, string username)
+    private string CreateToken(string clientId, string username, DateTime expires)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.JwtKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -86,7 +103,7 @@ public class LoginClientOperation : Operation<ClientModel, string>
                 new Claim("client_id", clientId),
                 new Claim("username", username)
             ],
-            expires: DateTime.Now.AddMinutes(30),
+            expires: expires,
             signingCredentials: credentials);
 
         var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
