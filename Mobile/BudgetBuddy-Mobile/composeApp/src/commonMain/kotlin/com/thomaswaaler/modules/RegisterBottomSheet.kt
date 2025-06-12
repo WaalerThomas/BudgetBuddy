@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,6 +47,32 @@ import budgetbuddy.composeapp.generated.resources.trending_up_24dp
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.vectorResource
 
+enum class ToAccountDropdownError {
+    Required,
+    SameAsFromAccount
+}
+
+enum class FromAccountDropdownError {
+    Required
+}
+
+enum class CategoryDropdownError {
+    Required
+}
+
+private val toAccountDropdownErrorMessages = mapOf(
+    ToAccountDropdownError.Required to "Required",
+    ToAccountDropdownError.SameAsFromAccount to "Cannot transfer to itself"
+)
+
+private val fromAccountDropdownErrorMessage = mapOf(
+    FromAccountDropdownError.Required to "Required"
+)
+
+private val categoryDropdownErrorMessage = mapOf(
+    CategoryDropdownError.Required to "Required"
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterBottomSheet(
@@ -79,6 +106,9 @@ fun RegisterBottomSheet(
 
     // **** FORM ERROR TYPES ****
     var amountErrorType by remember { mutableStateOf<CurrencyTextFieldError?>(null) }
+    var fromAccountErrorType by remember { mutableStateOf<FromAccountDropdownError?>(null) }
+    var toAccountErrorType by remember { mutableStateOf<ToAccountDropdownError?>(null) }
+    var categoryErrorType by remember { mutableStateOf<CategoryDropdownError?>(null) }
     // ****                  ****
 
     var amountSignEnabled by remember { mutableStateOf(false) }
@@ -244,6 +274,18 @@ fun RegisterBottomSheet(
                 if (showCategoryDropdown) {
                     var categoryExpanded by remember { mutableStateOf(false) }
 
+                    val supportingText: @Composable (() -> Unit)? = if (categoryErrorType != null) {
+                        { categoryDropdownErrorMessage[categoryErrorType]?.let { Text(it, color = MaterialTheme.colorScheme.error) } }
+                    } else {
+                        null
+                    }
+
+                    val trailingIcon: @Composable () -> Unit = if (categoryErrorType != null) {
+                        { Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
+                    } else {
+                        { ExposedDropdownMenuDefaults.TrailingIcon(expanded = categoryExpanded) }
+                    }
+
                     ExposedDropdownMenuBox(
                         expanded = categoryExpanded,
                         onExpandedChange = { categoryExpanded = !categoryExpanded }
@@ -253,7 +295,9 @@ fun RegisterBottomSheet(
                             value = categoryOptionText,
                             onValueChange = {},
                             label = { Text("Category") },
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = categoryExpanded)},
+                            trailingIcon = trailingIcon,
+                            supportingText = supportingText,
+                            isError = categoryErrorType != null,
                             modifier = Modifier
                                 .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
                                 .fillMaxWidth()
@@ -269,6 +313,10 @@ fun RegisterBottomSheet(
                                     onClick = {
                                         categoryOptionText = selectionOption
                                         categoryExpanded = false
+
+                                        if (categoryErrorType != null) {
+                                            categoryErrorType = null
+                                        }
                                     }
                                 )
                             }
@@ -280,6 +328,18 @@ fun RegisterBottomSheet(
                 if (showFromAccountDropdown) {
                     var accountFromExpanded by remember { mutableStateOf(false) }
 
+                    val supportingText: @Composable (() -> Unit)? = if (fromAccountErrorType != null) {
+                        { fromAccountDropdownErrorMessage[fromAccountErrorType]?.let { Text(it, color = MaterialTheme.colorScheme.error) } }
+                    } else {
+                        null
+                    }
+
+                    val trailingIcon: @Composable () -> Unit = if (fromAccountErrorType != null) {
+                        { Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
+                    } else {
+                        { ExposedDropdownMenuDefaults.TrailingIcon(expanded = accountFromExpanded) }
+                    }
+
                     ExposedDropdownMenuBox(
                         expanded = accountFromExpanded,
                         onExpandedChange = { accountFromExpanded = !accountFromExpanded }
@@ -287,12 +347,14 @@ fun RegisterBottomSheet(
                         OutlinedTextField(
                             readOnly = true,
                             value = accountFromOptionText,
-                            onValueChange = {},
+                            onValueChange = { },
                             label = { Text("From Account") },
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = accountFromExpanded)},
+                            trailingIcon = trailingIcon,
                             modifier = Modifier
                                 .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
-                                .fillMaxWidth()
+                                .fillMaxWidth(),
+                            supportingText = supportingText,
+                            isError = fromAccountErrorType != null
                         )
 
                         ExposedDropdownMenu(
@@ -305,6 +367,10 @@ fun RegisterBottomSheet(
                                     onClick = {
                                         accountFromOptionText = selectionOption
                                         accountFromExpanded = false
+
+                                        if (fromAccountErrorType != null) {
+                                            fromAccountErrorType = null
+                                        }
                                     }
                                 )
                             }
@@ -316,6 +382,18 @@ fun RegisterBottomSheet(
                 if (showToAccountDropdown) {
                     var accountToExpanded by remember { mutableStateOf(false) }
 
+                    val supportingText: @Composable (() -> Unit)? = if (toAccountErrorType != null) {
+                        { toAccountDropdownErrorMessages[toAccountErrorType]?.let { Text(it, color = MaterialTheme.colorScheme.error) } }
+                    } else {
+                        null
+                    }
+
+                    val trailingIcon: @Composable () -> Unit = if (toAccountErrorType != null) {
+                        { Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
+                    } else {
+                        { ExposedDropdownMenuDefaults.TrailingIcon(expanded = accountToExpanded) }
+                    }
+
                     ExposedDropdownMenuBox(
                         expanded = accountToExpanded,
                         onExpandedChange = { accountToExpanded = !accountToExpanded }
@@ -323,12 +401,14 @@ fun RegisterBottomSheet(
                         OutlinedTextField(
                             readOnly = true,
                             value = accountToOptionText,
-                            onValueChange = {},
+                            onValueChange = { },
                             label = { Text("To Account") },
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = accountToExpanded)},
+                            trailingIcon = trailingIcon,
                             modifier = Modifier
                                 .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
-                                .fillMaxWidth()
+                                .fillMaxWidth(),
+                            supportingText = supportingText,
+                            isError = toAccountErrorType != null
                         )
 
                         ExposedDropdownMenu(
@@ -341,6 +421,10 @@ fun RegisterBottomSheet(
                                     onClick = {
                                         accountToOptionText = selectionOption
                                         accountToExpanded = false
+
+                                        if (toAccountErrorType != null) {
+                                            toAccountErrorType = null
+                                        }
                                     }
                                 )
                             }
@@ -381,6 +465,8 @@ fun RegisterBottomSheet(
 
                 Button(
                     onClick = {
+                        // TODO: This NEEDS to be refactored
+
                         var isFormValid = true
 
                         // Amount Validation
@@ -397,6 +483,42 @@ fun RegisterBottomSheet(
                             if (amountValue == null) {
                                 isFormValid = false
                                 amountErrorType = CurrencyTextFieldError.InvalidFormat
+                            }
+                        }
+
+                        when (typeOptionText) {
+                            typeOptions[0] -> {
+                                // Validate Category
+                                if (categoryOptionText.isEmpty()) {
+                                    isFormValid = false
+                                    categoryErrorType = CategoryDropdownError.Required
+                                }
+
+                                if (accountFromOptionText.isEmpty()) {
+                                    isFormValid = false
+                                    fromAccountErrorType = FromAccountDropdownError.Required
+                                }
+                            }
+                            typeOptions[1] -> {
+                                // Validate Account Transfer
+                                if (accountFromOptionText.isEmpty()) {
+                                    isFormValid = false
+                                    fromAccountErrorType = FromAccountDropdownError.Required
+                                }
+
+                                if (accountToOptionText.isEmpty()) {
+                                    isFormValid = false
+                                    toAccountErrorType = ToAccountDropdownError.Required
+                                } else if (accountFromOptionText == accountToOptionText) {
+                                    isFormValid = false
+                                    toAccountErrorType = ToAccountDropdownError.SameAsFromAccount
+                                }
+                            }
+                            typeOptions[2] -> {
+                                if (accountToOptionText.isEmpty()) {
+                                    isFormValid = false
+                                    toAccountErrorType = ToAccountDropdownError.Required
+                                }
                             }
                         }
 
