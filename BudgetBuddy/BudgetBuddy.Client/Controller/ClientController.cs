@@ -1,22 +1,16 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using AutoMapper;
+﻿using AutoMapper;
 using BudgetBuddy.Client.Request;
-using BudgetBuddy.Client.Service;
 using BudgetBuddy.Client.ViewModel;
 using BudgetBuddy.Contracts.Interface.Client;
 using BudgetBuddy.Contracts.Model.Client;
 using BudgetBuddy.Contracts.Model.Common;
 using BudgetBuddy.Core.Exceptions;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace BudgetBuddy.Client.Controller;
 
 // Following this for validation: https://medium.com/@madu.sharadika/authentication-and-authorization-in-net-web-api-with-jwt-b46ef2f54e31
-// TODO: Add a refresh token
 // TODO: Add inn login attempts and lock account after x attempts
 
 [ApiController]
@@ -24,17 +18,17 @@ namespace BudgetBuddy.Client.Controller;
 public class ClientController
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IConfiguration _configuration;
     private readonly IMapper _mapper;
     private readonly IClientService _clientService;
+
+    private const string AccessTokenCookieName = "prrrKeKeKedip";
+    private const string RefreshTokenCookieName = "prrrKeKeKedipRefresh";
     
     public ClientController(
-        IConfiguration configuration,
         IClientService clientService,
         IMapper mapper,
         IHttpContextAccessor httpContextAccessor)
     {
-        _configuration = configuration;
         _clientService = clientService;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
@@ -61,19 +55,18 @@ public class ClientController
     [HttpPost("login")]
     [EndpointSummary("Login")]
     [EndpointDescription("Login to the application")]
-    public BuddyResponse<string> Login(LoginClientRequest loginClientRequest)
+    public BuddyResponse<bool> Login(LoginClientRequest loginClientRequest)
     {
         var loginClient = _mapper.Map<LoginClientRequest, ClientModel>(loginClientRequest);
         var authenticationTokens = _clientService.Login(loginClient);
         
-        // TODO: Add token to the response header instead of the body as cookie
         var httpContext = _httpContextAccessor.HttpContext;
         if (httpContext is null)
         {
             throw new BuddyException("HttpContext is null");
         }
         
-        httpContext.Response.Cookies.Append("prrrKeKeKedip", authenticationTokens.AccessToken, new CookieOptions
+        httpContext.Response.Cookies.Append(AccessTokenCookieName, authenticationTokens.AccessToken, new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
@@ -81,7 +74,7 @@ public class ClientController
                 Expires = (DateTimeOffset)authenticationTokens.ExpiresIn
             });
 
-        httpContext.Response.Cookies.Append("prrrKeKeKedipRefresh", authenticationTokens.RefreshToken, new CookieOptions
+        httpContext.Response.Cookies.Append(RefreshTokenCookieName, authenticationTokens.RefreshToken, new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
@@ -89,7 +82,7 @@ public class ClientController
                 Expires = (DateTimeOffset)authenticationTokens.RefreshExpiresIn
             });
         
-        return new BuddyResponse<AuthenticationInfoVm>(_mapper.Map<AuthenticationInfoVm>(authenticationTokens));
+        return new BuddyResponse<bool>(true);
     }
     
     [HttpPost("logout")]
@@ -97,6 +90,15 @@ public class ClientController
     [EndpointDescription("Logout from the application")]
     public BuddyResponse<bool> Logout()
     {
-        throw new NotImplementedException();
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext is null)
+        {
+            throw new BuddyException("HttpContext is null");
+        }
+        
+        httpContext.Response.Cookies.Delete(AccessTokenCookieName);
+        httpContext.Response.Cookies.Delete(RefreshTokenCookieName);
+        
+        return new BuddyResponse<bool>(true);
     }
 }
