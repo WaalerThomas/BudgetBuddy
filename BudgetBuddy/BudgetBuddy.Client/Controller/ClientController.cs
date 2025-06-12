@@ -55,7 +55,7 @@ public class ClientController
     [HttpPost("login")]
     [EndpointSummary("Login")]
     [EndpointDescription("Login to the application")]
-    public BuddyResponse<bool> Login(LoginClientRequest loginClientRequest)
+    public BuddyResponse<AuthenticationInfoVm> Login(LoginClientRequest loginClientRequest)
     {
         var loginClient = _mapper.Map<LoginClientRequest, ClientModel>(loginClientRequest);
         var authenticationTokens = _clientService.Login(loginClient);
@@ -82,7 +82,7 @@ public class ClientController
                 Expires = (DateTimeOffset)authenticationTokens.RefreshExpiresIn
             });
         
-        return new BuddyResponse<bool>(true);
+        return new BuddyResponse<AuthenticationInfoVm>(_mapper.Map<AuthenticationInfoVm>(authenticationTokens));
     }
     
     [HttpPost("logout")]
